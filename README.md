@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # minecraft
 
 > A Vue.js project
@@ -28,3 +29,6 @@ npm test
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# advanced_web_pj
+>>>>>>> b92fa0ba7e27e7bed7ae9b48a9e18fa4a49ebc60

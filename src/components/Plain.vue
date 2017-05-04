@@ -423,8 +423,8 @@
 
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
-    camera.position.y = getY(worldHalfWidth, worldHalfDepth) * 100 + 100
-    camera.position.z = 0;
+    //camera.position.y = getY(worldHalfWidth, worldHalfDepth) * 100 + 100
+    camera.position.y = 75;
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
@@ -578,7 +578,7 @@
   function animate () {
     requestAnimationFrame(animate)
     render()
-    document.getElementById('test').innerHTML=camera.position.z;
+    document.getElementById('test').innerHTML=camera.position.z+" y: "+camera.position.y+" x: "+ camera.position.x + " lookat : "+" y up: "+camera.up.y+" x up: "+camera.up.x;
     //stats.update()
   }
   function render () {

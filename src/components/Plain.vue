@@ -330,52 +330,35 @@
       targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
 
       var localVertex = this.object.position.clone()
-      localVertex.y -= 60
       var globalVertex = targetPosition.clone()
-      globalVertex.y -=60
-      var directionVector = globalVertex.sub(localVertex);
-      var forwardCrash = false
-      var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
-      var collisionResults = ray.intersectObjects(oooo)
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        forwardCrash = true;   // crash 是一个标记变量
-      }
+      var directionVector = globalVertex.sub(localVertex)
+
+      var forwardCrash = collisionDetect(localVertex, directionVector, oooo);
       if (forwardCrash) {
         actualForwardMoveSpeed=0;
       }
-      var backwardCrash = false
+
+
       var directionVector1=directionVector.clone()
       directionVector1.x=-directionVector.x
       directionVector1.z=-directionVector.z
-      var ray1=new THREE.Raycaster(localVertex,directionVector1.clone().normalize())
-      var collisionResults1 = ray1.intersectObjects(oooo)
-      if (collisionResults1.length > 0 && collisionResults1[0].distance < directionVector1.length()) {
-        backwardCrash = true;   // crash 是一个标记变量
-      }
+      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo);
       if (backwardCrash) {
         actualBackwardMoveSpeed=0;
       }
-      var leftCrash = false
+
       var directionVector2=directionVector.clone()
-      directionVector2.x = -directionVector.z
-      directionVector2.z = directionVector.x
-      var ray2=new THREE.Raycaster(localVertex,directionVector2.clone().normalize())
-      var collisionResults2 = ray2.intersectObjects(oooo)
-      if (collisionResults2.length > 0 && collisionResults2[0].distance < directionVector2.length()) {
-        leftCrash = true;   // crash 是一个标记变量
-      }
+      directionVector2.x = directionVector.z
+      directionVector2.z = -directionVector.x
+      var leftCrash = collisionDetect(localVertex, directionVector2, oooo);
       if (leftCrash) {
         actualLeftMoveSpeed=0;
       }
-      var rightCrash = false
+
       var directionVector3=directionVector.clone()
-      directionVector3.x = directionVector.z
-      directionVector3.z = -directionVector.x
-      var ray3=new THREE.Raycaster(localVertex,directionVector3.clone().normalize())
-      var collisionResults3 = ray3.intersectObjects(oooo)
-      if (collisionResults3.length > 0 && collisionResults3[0].distance < directionVector3.length()) {
-        rightCrash = true;   // crash 是一个标记变量
-      }
+      directionVector3.x = -directionVector.z
+      directionVector3.z = directionVector.x
+      var rightCrash = collisionDetect(localVertex, directionVector3, oooo);
       if (rightCrash) {
         actualRightMoveSpeed=0;
       }
@@ -451,11 +434,39 @@
 */
 
     };
-/*
-    function collisionDetect(localVertex, directionVector){
 
+    function collisionDetect(localVertex, directionVector, oooo){
+
+      var bodyHalfsize = 10;
+      var bodyHalfHeight = 35;
+      //detect 6 points
+      var normalizedDirectionVector = directionVector.clone().normalize();
+
+      var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfsize;
+      var leftDeltaZ = normalizedDirectionVector.x * bodyHalfsize;
+      var rightDeltaX = normalizedDirectionVector.z * bodyHalfsize;
+      var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfsize;
+
+      var deltaX = [0, 0,               leftDeltaX, leftDeltaX,      rightDeltaX, rightDeltaX]
+      var deltaY = [0, -bodyHalfHeight, 0,          -bodyHalfHeight, 0,           -bodyHalfHeight]
+      var deltaZ = [0, 0,               leftDeltaZ, leftDeltaZ,      rightDeltaZ, rightDeltaZ]
+
+      for (var i=0; i<deltaX.length; i++){
+        var vertex = localVertex.clone();
+        vertex.x = localVertex.x + deltaX[i];
+        vertex.y = localVertex.y + deltaY[i];
+        vertex.z = localVertex.z + deltaZ[i];
+        var ray=new THREE.Raycaster(vertex,normalizedDirectionVector)
+        var collisionResults = ray.intersectObjects(oooo)
+        if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()+3) {
+          return true;   // crash 是一个标记变量
+
+        }
+      }
+
+      return false;
     }
-*/
+
 
     function contextmenu( event ) {
 
@@ -482,7 +493,8 @@
     var _onKeyUp = bind( this, this.onKeyUp );
 
     this.domElement.addEventListener( 'contextmenu', contextmenu, false );
-    this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
+    //lyz
+    //this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
     //this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
     //this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
 
@@ -593,9 +605,9 @@
     var material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2, transparent: true })
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
-    var fp_mesh = new Physijs.BoxMesh(new THREE.CubeGeometry(50, 100, 50), Physijs.createMaterial(new THREE.MeshPhongMaterial({		opacity: 0,		transparent: true	})), 1);
-    fp_mesh.position.set(camera.position.x, 0, camera.position.z);
-    scene.add(fp_mesh);    //
+ //   var fp_mesh = new Physijs.BoxMesh(new THREE.CubeGeometry(50, 100, 50), Physijs.createMaterial(new THREE.MeshPhongMaterial({		opacity: 0,		transparent: true	})), 1);
+ //   fp_mesh.position.set(camera.position.x, 0, camera.position.z);
+ //   scene.add(fp_mesh);    //
     raycaster = new THREE.Raycaster()
     mouse = new THREE.Vector2()
     geometry = new THREE.PlaneBufferGeometry(1000, 1000)

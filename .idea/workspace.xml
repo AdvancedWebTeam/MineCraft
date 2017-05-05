@@ -21,9 +21,49 @@
       <file leaf-file-name="Plain.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1830">
-              <caret line="434" column="0" lean-forward="false" selection-start-line="434" selection-start-column="0" selection-end-line="434" selection-end-column="0" />
+            <state relative-caret-position="380">
+              <caret line="404" column="1" lean-forward="true" selection-start-line="404" selection-start-column="1" selection-end-line="404" selection-end-column="1" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="three.module.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/three/build/three.module.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2738">
+              <caret line="666" column="16" lean-forward="true" selection-start-line="666" selection-start-column="16" selection-end-line="666" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lib.es6.d.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es6.d.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="19180" column="4" lean-forward="false" selection-start-line="19180" selection-start-column="4" selection-end-line="19180" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="threejs.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/assets/three/editor/js/libs/tern-threejs/threejs.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="550" column="8" lean-forward="false" selection-start-line="550" selection-start-column="8" selection-end-line="550" selection-end-column="8" />
+              <folding>
+                <marker date="1494006717505" expanded="true" signature="96205:96211" ph=" " />
+                <marker date="1494006717505" expanded="true" signature="96349:96355" ph=" " />
+                <marker date="1494006717505" expanded="true" signature="96465:96471" ph=" " />
+                <marker date="1494006717505" expanded="true" signature="96560:96566" ph=" " />
+                <marker date="1494006717505" expanded="true" signature="96609:96615" ph=" " />
+                <marker date="1494006717505" expanded="true" signature="240512:240517" ph="&amp;" />
+                <marker date="1494006717505" expanded="true" signature="240517:240522" ph="&amp;" />
+                <marker date="1494006717505" expanded="true" signature="240978:240982" ph="&lt;" />
+                <marker date="1494006717505" expanded="true" signature="240988:240992" ph="&gt;" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -44,10 +84,10 @@
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <marker date="1494008647787" expanded="true" signature="38226:38293" ph="..." />
-                <marker date="1494008647787" expanded="true" signature="38226:38311" ph="..." />
-                <marker date="1494008647787" expanded="true" signature="38226:38324" ph="..." />
-                <marker date="1494008647787" expanded="true" signature="38226:38339" ph="..." />
+                <marker date="1494017406893" expanded="true" signature="44910:44927" ph="..." />
+                <marker date="1494017406893" expanded="true" signature="44910:44945" ph="..." />
+                <marker date="1494017406893" expanded="true" signature="44910:44958" ph="..." />
+                <marker date="1494017406893" expanded="true" signature="44910:44973" ph="..." />
               </folding>
             </state>
           </provider>
@@ -64,8 +104,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>module.i</find>
-      <find>module.</find>
       <find>module</find>
       <find>modul</find>
       <find>ex</find>
@@ -93,7 +131,9 @@
       <find>oooo</find>
       <find>mousemove</find>
       <find>CollisionDe</find>
-      <find>lyz</find>
+      <find>matrix</find>
+      <find>update</find>
+      <find>jump</find>
     </findStrings>
     <replaceStrings>
       <replace>(</replace>
@@ -107,6 +147,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="lzy" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -254,7 +299,7 @@
     <property name="node.js.selected.package.standard" value="F:/phpStudy_new/WWW/minecraft/node_modules/eslint" />
     <property name="JavaScriptPreferStrict" value="true" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="lyz&#9;FILE&#9;file:///home/lyz/WebstormProjects/MineCraft/src/components/Hello.vue&#10;termi&#9;ACTION&#9;ActivateTerminalToolWindow" />
+    <property name="SearchEverywhereHistoryKey" value="termin&#9;ACTION&#9;ActivateTerminalToolWindow" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -351,6 +396,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="6373bb69-41ad-43cd-b5e4-cde6e16ca568" name="Default" comment="" />
@@ -365,7 +413,6 @@
       <workItem from="1493745286471" duration="18000" />
       <workItem from="1493785699248" duration="14515000" />
       <workItem from="1493991427489" duration="2285000" />
-      <workItem from="1494008402512" duration="656000" />
     </task>
     <task id="LOCAL-00001" summary="basic structure">
       <created>1493807174028</created>
@@ -385,39 +432,45 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71709000" />
+    <option name="totallyTimeSpent" value="78926000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1615" height="1054" extended-state="6" />
+    <editor active="true" />
     <layout>
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24210526" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914045" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3259958" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3259958" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3259958" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24210526" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/node_modules/karma/config.tpl.js" />
-      </list>
-    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -433,17 +486,11 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/assets/three/src/renderers/shaders/ShaderChunk.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="112" column="7" lean-forward="false" selection-start-line="112" selection-start-column="7" selection-end-line="112" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/three/build/three.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1169100">
           <caret line="43300" column="5" lean-forward="false" selection-start-line="43300" selection-start-column="2" selection-end-line="43300" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -638,6 +685,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/js/hahaha.js" />
+    <entry file="file://$PROJECT_DIR$/src/components/Hello.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="27" lean-forward="false" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -663,6 +718,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="779400">
           <caret line="43300" column="5" lean-forward="false" selection-start-line="43300" selection-start-column="2" selection-end-line="43300" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -703,13 +759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es6.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="9357" column="4" lean-forward="false" selection-start-line="9357" selection-start-column="4" selection-end-line="9357" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/router/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -717,31 +766,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+    <entry file="file://$PROJECT_DIR$/src/assets/three/editor/js/libs/tern-threejs/threejs.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="204">
+          <caret line="550" column="8" lean-forward="false" selection-start-line="550" selection-start-column="8" selection-end-line="550" selection-end-column="8" />
           <folding>
-            <marker date="1494008647787" expanded="true" signature="38226:38293" ph="..." />
-            <marker date="1494008647787" expanded="true" signature="38226:38311" ph="..." />
-            <marker date="1494008647787" expanded="true" signature="38226:38324" ph="..." />
-            <marker date="1494008647787" expanded="true" signature="38226:38339" ph="..." />
+            <marker date="1494006717505" expanded="true" signature="96205:96211" ph=" " />
+            <marker date="1494006717505" expanded="true" signature="96349:96355" ph=" " />
+            <marker date="1494006717505" expanded="true" signature="96465:96471" ph=" " />
+            <marker date="1494006717505" expanded="true" signature="96560:96566" ph=" " />
+            <marker date="1494006717505" expanded="true" signature="96609:96615" ph=" " />
+            <marker date="1494006717505" expanded="true" signature="240512:240517" ph="&amp;" />
+            <marker date="1494006717505" expanded="true" signature="240517:240522" ph="&amp;" />
+            <marker date="1494006717505" expanded="true" signature="240978:240982" ph="&lt;" />
+            <marker date="1494006717505" expanded="true" signature="240988:240992" ph="&gt;" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Hello.vue">
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es6.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="27" lean-forward="false" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+        <state relative-caret-position="273">
+          <caret line="19180" column="4" lean-forward="false" selection-start-line="19180" selection-start-column="4" selection-end-line="19180" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/three/build/three.module.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2738">
+          <caret line="666" column="16" lean-forward="true" selection-start-line="666" selection-start-column="16" selection-end-line="666" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1830">
-          <caret line="434" column="0" lean-forward="false" selection-start-line="434" selection-start-column="0" selection-end-line="434" selection-end-column="0" />
+        <state relative-caret-position="380">
+          <caret line="404" column="1" lean-forward="true" selection-start-line="404" selection-start-column="1" selection-end-line="404" selection-end-column="1" />
           <folding />
         </state>
       </provider>

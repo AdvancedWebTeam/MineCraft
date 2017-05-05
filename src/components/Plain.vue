@@ -123,6 +123,9 @@
     this.moveBackward = false;
     this.moveLeft = false;
     this.moveRight = false;
+    this.jumping = false;
+    this.falling = false;
+    this.jumpingHight = 0;
 
     this.mouseDragOn = false;
 
@@ -271,6 +274,13 @@
 
     };
 
+    this.onKeyPress = function(event) {
+        switch(event.keyCode){
+          case 32: /*space*/
+                this.jumping = true; break;
+        }
+    }
+
     this.update = function( delta,oooo ) {
 
       if ( this.enabled === false ) return;
@@ -362,7 +372,7 @@
       if (rightCrash) {
         actualRightMoveSpeed=0;
       }
-      document.getElementById('test').innerHTML=directionVector.x+" "+directionVector.y+" "+directionVector.z;
+      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
 
       this.object.lookAt( targetPosition );
 
@@ -371,6 +381,38 @@
 
       if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
       if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
+
+      if (this.jumping) {
+          if (this.falling) {
+            this.jumping = false;
+          }
+          else{
+            this.object.position.y +=5;
+            this.jumpingHight += 5;
+            if (this.jumpingHight>=60){
+              this.jumping = false;
+              this.jumpingHight = 0;
+              this.falling =true;
+            }
+
+          }
+
+      }
+      if (this.falling){
+        var downVector =  new THREE.Vector3( 0, 1, 0 )
+        var localV = localVertex.clone();
+        localV.y -= 70;
+        var downCrash = collisionDetect(localVertex, directionVector,oooo)
+        if (downCrash) this.falling == false;
+        else if (this.object.position.y <=70){
+          this.object.position.y = 70;
+          this.falling = false;
+        }
+        else{
+            this.object.position.y -= 5;
+        }
+
+      }
       person_mesh.position.x=this.object.position.x;
       person_mesh.position.z=this.object.position.z;
       person_mesh.position.y=this.object.position.y-70;
@@ -379,7 +421,7 @@
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
       if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
 */
-
+/*
       var actualLookSpeed = delta * this.lookSpeed;
 
       if ( ! this.activeLook ) {
@@ -409,7 +451,7 @@
           this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
 
       }
-
+*/
 /*
       var targetPosition = this.target,
         position = this.object.position
@@ -461,9 +503,8 @@
         vertex.z = localVertex.z + deltaZ[i];
         var ray=new THREE.Raycaster(vertex,normalizedDirectionVector)
         var collisionResults = ray.intersectObjects(oooo)
-        if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()+3) {
+        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length()+34) {
           return true;   // crash 是一个标记变量
-
         }
       }
 
@@ -486,6 +527,7 @@
 
       window.removeEventListener( 'keydown', _onKeyDown, false );
       window.removeEventListener( 'keyup', _onKeyUp, false );
+      window.removeEventListener( 'keypress', _onKeyPress, false);
 
     };
 
@@ -494,6 +536,7 @@
     //var _onMouseUp = bind( this, this.onMouseUp );
     var _onKeyDown = bind( this, this.onKeyDown );
     var _onKeyUp = bind( this, this.onKeyUp );
+    var _onKeyPress = bind(this, this.onKeyPress);
 
     this.domElement.addEventListener( 'contextmenu', contextmenu, false );
     this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
@@ -502,7 +545,7 @@
 
     window.addEventListener( 'keydown', _onKeyDown, false );
     window.addEventListener( 'keyup', _onKeyUp, false );
-
+    window.addEventListener( 'keypress', _onKeyPress, false);
     function bind( scope, fn ) {
 
       return function () {

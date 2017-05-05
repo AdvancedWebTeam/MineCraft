@@ -493,8 +493,7 @@
     var _onKeyUp = bind( this, this.onKeyUp );
 
     this.domElement.addEventListener( 'contextmenu', contextmenu, false );
-    //lyz
-    //this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
+    this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
     //this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
     //this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
 

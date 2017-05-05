@@ -8,18 +8,18 @@
   //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
   var ImprovedNoise = function () {
 
-    var p = [ 151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,
-      23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,
-      174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,
-      133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,
-      89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,
-      202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,
-      248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,
-      178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,
-      14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,
-      93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 ];
+    var p = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10,
+      23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87,
+      174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211,
+      133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208,
+      89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5,
+      202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119,
+      248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232,
+      178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249,
+      14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205,
+      93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
 
-    for (var i = 0; i < 256 ; i ++) {
+    for (var i = 0; i < 256; i++) {
 
       p[256 + i] = p[i];
 
@@ -41,7 +41,7 @@
 
       var h = hash & 15;
       var u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-      return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
+      return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 
     }
 
@@ -83,10 +83,10 @@
    * @author paulirish / http://paulirish.com/
    */
 
-  THREE.FirstPersonControls = function ( object, domElement ) {
+  THREE.FirstPersonControls = function (object, domElement) {
 
     this.object = object;
-    this.target = new THREE.Vector3( 0, 0, 0 );
+    this.target = new THREE.Vector3(0, 0, 0);
 
     this.domElement = ( domElement !== undefined ) ? domElement : document;
 
@@ -129,9 +129,9 @@
     this.viewHalfX = 0;
     this.viewHalfY = 0;
 
-    if ( this.domElement !== document ) {
+    if (this.domElement !== document) {
 
-      this.domElement.setAttribute( 'tabindex', - 1 );
+      this.domElement.setAttribute('tabindex', -1);
 
     }
 
@@ -139,7 +139,7 @@
 
     this.handleResize = function () {
 
-      if ( this.domElement === document ) {
+      if (this.domElement === document) {
 
         this.viewHalfX = window.innerWidth / 2;
         this.viewHalfY = window.innerHeight / 2;
@@ -153,59 +153,59 @@
 
     };
 
-/*
-    this.onMouseDown = function ( event ) {
+    /*
+     this.onMouseDown = function ( event ) {
 
-      if ( this.domElement !== document ) {
+     if ( this.domElement !== document ) {
 
-        this.domElement.focus();
+     this.domElement.focus();
 
-      }
+     }
 
-      event.preventDefault();
-      event.stopPropagation();
+     event.preventDefault();
+     event.stopPropagation();
 
-      if ( this.activeLook ) {
+     if ( this.activeLook ) {
 
-        switch ( event.button ) {
+     switch ( event.button ) {
 
-          case 0: this.moveForward = true; break;
-          case 2: this.moveBackward = true; break;
+     case 0: this.moveForward = true; break;
+     case 2: this.moveBackward = true; break;
 
-        }
+     }
 
-      }
+     }
 
-      this.mouseDragOn = true;
+     this.mouseDragOn = true;
 
-    };
-*/
+     };
+     */
 
-/*
-    this.onMouseUp = function ( event ) {
+    /*
+     this.onMouseUp = function ( event ) {
 
-      event.preventDefault();
-      event.stopPropagation();
+     event.preventDefault();
+     event.stopPropagation();
 
-      if ( this.activeLook ) {
+     if ( this.activeLook ) {
 
-        switch ( event.button ) {
+     switch ( event.button ) {
 
-          case 0: this.moveForward = false; break;
-          case 2: this.moveBackward = false; break;
+     case 0: this.moveForward = false; break;
+     case 2: this.moveBackward = false; break;
 
-        }
+     }
 
-      }
+     }
 
-      this.mouseDragOn = false;
+     this.mouseDragOn = false;
 
-    };
-*/
+     };
+     */
 
-    this.onMouseMove = function ( event ) {
+    this.onMouseMove = function (event) {
 
-      if ( this.domElement === document ) {
+      if (this.domElement === document) {
 
         this.mouseX = event.pageX - this.viewHalfX;
         this.mouseY = event.pageY - this.viewHalfY;
@@ -219,65 +219,81 @@
 
     };
 
-    this.onKeyDown = function ( event ) {
+    this.onKeyDown = function (event) {
 
       //event.preventDefault();
 
-      switch ( event.keyCode ) {
+      switch (event.keyCode) {
 
         case 38: /*up*/
-        case 87: /*W*/ this.moveForward = true; break;
+        case 87: /*W*/
+          this.moveForward = true;
+          break;
 
         case 37: /*left*/
-        case 65: /*A*/ this.moveLeft = true; break;
+        case 65: /*A*/
+          this.moveLeft = true;
+          break;
 
         case 40: /*down*/
-        case 83: /*S*/ this.moveBackward = true; break;
+        case 83: /*S*/
+          this.moveBackward = true;
+          break;
 
         case 39: /*right*/
-        case 68: /*D*/ this.moveRight = true; break;
+        case 68: /*D*/
+          this.moveRight = true;
+          break;
 
-/*
-        case 82: /!*R*!/ this.moveUp = true; break;
-        case 70: /!*F*!/ this.moveDown = true; break;
-*/
+        /*
+         case 82: /!*R*!/ this.moveUp = true; break;
+         case 70: /!*F*!/ this.moveDown = true; break;
+         */
 
       }
 
     };
 
-    this.onKeyUp = function ( event ) {
+    this.onKeyUp = function (event) {
 
-      switch ( event.keyCode ) {
+      switch (event.keyCode) {
 
         case 38: /*up*/
-        case 87: /*W*/ this.moveForward = false; break;
+        case 87: /*W*/
+          this.moveForward = false;
+          break;
 
         case 37: /*left*/
-        case 65: /*A*/ this.moveLeft = false; break;
+        case 65: /*A*/
+          this.moveLeft = false;
+          break;
 
         case 40: /*down*/
-        case 83: /*S*/ this.moveBackward = false; break;
+        case 83: /*S*/
+          this.moveBackward = false;
+          break;
 
         case 39: /*right*/
-        case 68: /*D*/ this.moveRight = false; break;
+        case 68: /*D*/
+          this.moveRight = false;
+          break;
 
-/*
-        case 82: /!*R*!/ this.moveUp = false; break;
-        case 70: /!*F*!/ this.moveDown = false; break;
-*/
+        /*
+         case 82: /!*R*!/ this.moveUp = false; break;
+         case 70: /!*F*!/ this.moveDown = false; break;
+         */
 
       }
 
     };
 
-    this.update = function( delta,oooo ) {
+    this.update = function (delta, oooo,person_mesh) {
 
-      if ( this.enabled === false ) return;
+      if (this.enabled === false) return;
 
-      if ( this.heightSpeed ) {
+      if (this.heightSpeed) {
 
-        var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
+        var y = THREE.Math.clamp(this.object.position.y, this.heightMin, this.heightMax);
         var heightDelta = y - this.heightMin;
 
         this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
@@ -290,7 +306,7 @@
 
       var actualLookSpeed = delta * this.lookSpeed;
 
-      if ( ! this.activeLook ) {
+      if (!this.activeLook) {
 
         actualLookSpeed = 0;
 
@@ -298,23 +314,23 @@
 
       var verticalLookRatio = 1;
 
-      if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
         verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
 
       }
 
       this.lon += this.mouseX * actualLookSpeed;
-      if ( this.lookVertical ) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
+      if (this.lookVertical) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
 
-      this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-      this.phi = THREE.Math.degToRad( 90 - this.lat );
+      this.lat = Math.max(-85, Math.min(85, this.lat));
+      this.phi = THREE.Math.degToRad(90 - this.lat);
 
-      this.theta = THREE.Math.degToRad( this.lon );
+      this.theta = THREE.Math.degToRad(this.lon);
 
-      if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
-        this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
+        this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
 
       }
 
@@ -325,78 +341,121 @@
       var actualRightMoveSpeed = actualMoveSpeed;
       var targetPosition = this.target,
         position = this.object.position
-      targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
-      targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+      targetPosition.x = position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
+      targetPosition.y = position.y //+ 100 * Math.cos(this.phi);
+      targetPosition.z = position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
+      var originPoint = person_mesh.position.clone();
+      var crash = false;
+      for (var vertexIndex = 0; vertexIndex < person_mesh.geometry.vertices.length; vertexIndex++) {
+        // 顶点原始坐标
+        var localVertex = person_mesh.geometry.vertices[vertexIndex].clone();
+        // 顶点经过变换后的坐标
+        var globalVertex = localVertex.applyMatrix4(person_mesh.matrix);
+        // 获得由中心指向顶点的向量
+        var directionVector = globalVertex.sub(person_mesh.position);
 
-      var localVertex = this.object.position.clone()
+        // 将方向向量初始化
+        var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+        // 检测射线与多个物体的相交情况
+        var collisionResults = ray.intersectObjects(oooo);
+        // 如果返回结果不为空，且交点与射线起点的距离小于物体中心至顶点的距离，则发生了碰撞
+        if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+          crash = true;   // crash 是一个标记变量
+        }
+      }
+      if (crash==true) {
+          actualForwardMoveSpeed=0;
+      }
+      document.getElementById('test').innerHTML = crash;
+
+/*      var localVertex = this.object.position.clone()
       localVertex.y -= 60
       var globalVertex = targetPosition.clone()
-      globalVertex.y -=60
+      globalVertex.y -= 60
       var directionVector = globalVertex.sub(localVertex);
       var forwardCrash = false
-      var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
+      var ray = new THREE.Raycaster(localVertex, directionVector.clone().normalize())
       var collisionResults = ray.intersectObjects(oooo)
       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
         forwardCrash = true;   // crash 是一个标记变量
       }
       if (forwardCrash) {
-        actualForwardMoveSpeed=0;
-      }
+        actualForwardMoveSpeed = 0;
+      }*/
+
+      /*
+       var localVertex = this.object.position.clone()
+       localVertex.y -= 60
+       var globalVertex = targetPosition.clone()
+       globalVertex.y -=60
+       var directionVector = globalVertex.sub(localVertex);
+       var forwardCrash = false
+       var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
+       var collisionResults = ray.intersectObjects(oooo)
+       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+       forwardCrash = true;   // crash 是一个标记变量
+       }
+       if (forwardCrash) {
+       actualForwardMoveSpeed=0;
+       }
+       */
       var backwardCrash = false
-      var directionVector1=directionVector.clone()
-      directionVector1.x=-directionVector.x
-      directionVector1.z=-directionVector.z
-      var ray1=new THREE.Raycaster(localVertex,directionVector1.clone().normalize())
+      var directionVector1 = directionVector.clone()
+      directionVector1.x = -directionVector.x
+      directionVector1.z = -directionVector.z
+      var ray1 = new THREE.Raycaster(localVertex, directionVector1.clone().normalize())
       var collisionResults1 = ray1.intersectObjects(oooo)
       if (collisionResults1.length > 0 && collisionResults1[0].distance < directionVector1.length()) {
         backwardCrash = true;   // crash 是一个标记变量
       }
       if (backwardCrash) {
-        actualBackwardMoveSpeed=0;
+        actualBackwardMoveSpeed = 0;
       }
       var leftCrash = false
-      var directionVector2=directionVector.clone()
+      var directionVector2 = directionVector.clone()
       directionVector2.x = -directionVector.z
       directionVector2.z = directionVector.x
-      var ray2=new THREE.Raycaster(localVertex,directionVector2.clone().normalize())
+      var ray2 = new THREE.Raycaster(localVertex, directionVector2.clone().normalize())
       var collisionResults2 = ray2.intersectObjects(oooo)
       if (collisionResults2.length > 0 && collisionResults2[0].distance < directionVector2.length()) {
         leftCrash = true;   // crash 是一个标记变量
       }
       if (leftCrash) {
-        actualLeftMoveSpeed=0;
+        actualLeftMoveSpeed = 0;
       }
       var rightCrash = false
-      var directionVector3=directionVector.clone()
+      var directionVector3 = directionVector.clone()
       directionVector3.x = directionVector.z
       directionVector3.z = -directionVector.x
-      var ray3=new THREE.Raycaster(localVertex,directionVector3.clone().normalize())
+      var ray3 = new THREE.Raycaster(localVertex, directionVector3.clone().normalize())
       var collisionResults3 = ray3.intersectObjects(oooo)
       if (collisionResults3.length > 0 && collisionResults3[0].distance < directionVector3.length()) {
         rightCrash = true;   // crash 是一个标记变量
       }
       if (rightCrash) {
-        actualRightMoveSpeed=0;
+        actualRightMoveSpeed = 0;
       }
-      document.getElementById('test').innerHTML=directionVector.x+" "+directionVector.y+" "+directionVector.z;
+      //document.getElementById('test').innerHTML = directionVector.x + " " + directionVector.y + " " + directionVector.z;
 
-      this.object.lookAt( targetPosition );
+      this.object.lookAt(targetPosition);
 
-      if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualForwardMoveSpeed + this.autoSpeedFactor ) );
-      if ( this.moveBackward ) this.object.translateZ( actualBackwardMoveSpeed );
+      if (this.moveForward || ( this.autoForward && !this.moveBackward )) this.object.translateZ(-( actualForwardMoveSpeed + this.autoSpeedFactor ));
+      if (this.moveBackward) this.object.translateZ(actualBackwardMoveSpeed);
 
-      if ( this.moveLeft ) this.object.translateX( - actualLeftMoveSpeed );
-      if ( this.moveRight ) this.object.translateX( actualRightMoveSpeed );
+      if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
+      if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
+      person_mesh.position.x=this.object.position.x;
+      person_mesh.position.z=this.object.position.z;
+      person_mesh.position.y=this.object.position.y-70;
 
-/*
-      if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
-      if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
-*/
+      /*
+       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
+       if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
+       */
 
       var actualLookSpeed = delta * this.lookSpeed;
 
-      if ( ! this.activeLook ) {
+      if (!this.activeLook) {
 
         actualLookSpeed = 0;
 
@@ -404,51 +463,51 @@
 
       var verticalLookRatio = 1;
 
-      if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
         verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
 
       }
 
       this.lon += this.mouseX * actualLookSpeed;
-      if ( this.lookVertical ) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
+      if (this.lookVertical) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
 
-      this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-      this.phi = THREE.Math.degToRad( 90 - this.lat );
+      this.lat = Math.max(-85, Math.min(85, this.lat));
+      this.phi = THREE.Math.degToRad(90 - this.lat);
 
-      this.theta = THREE.Math.degToRad( this.lon );
+      this.theta = THREE.Math.degToRad(this.lon);
 
-        if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
-          this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
-
-      }
-
-/*
-      var targetPosition = this.target,
-        position = this.object.position
-      targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
-      targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
-
-      var localVertex = this.object.position.clone()
-      localVertex.y -= 60
-      var globalVertex = targetPosition.clone()
-      globalVertex.y -=60
-      var directionVector = globalVertex.sub(localVertex);
-      var crash = false
-      var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
-      var collisionResults = ray.intersectObjects(oooo)
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        crash = true;   // crash 是一个标记变量
-      }
-      if (crash) {
+        this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
 
       }
-      document.getElementById('test').innerHTML=crash;
 
-      this.object.lookAt( targetPosition );
-*/
+      /*
+       var targetPosition = this.target,
+       position = this.object.position
+       targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
+       targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
+       targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+
+       var localVertex = this.object.position.clone()
+       localVertex.y -= 60
+       var globalVertex = targetPosition.clone()
+       globalVertex.y -=60
+       var directionVector = globalVertex.sub(localVertex);
+       var crash = false
+       var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
+       var collisionResults = ray.intersectObjects(oooo)
+       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+       crash = true;   // crash 是一个标记变量
+       }
+       if (crash) {
+
+       }
+       document.getElementById('test').innerHTML=crash;
+
+       this.object.lookAt( targetPosition );
+       */
 
     };
 /*
@@ -457,43 +516,43 @@
     }
 */
 
-    function contextmenu( event ) {
+    function contextmenu(event) {
 
       event.preventDefault();
 
     }
 
-    this.dispose = function() {
+    this.dispose = function () {
 
-      this.domElement.removeEventListener( 'contextmenu', contextmenu, false );
+      this.domElement.removeEventListener('contextmenu', contextmenu, false);
       //this.domElement.removeEventListener( 'mousedown', _onMouseDown, false );
-      this.domElement.removeEventListener( 'mousemove', _onMouseMove, false );
+      this.domElement.removeEventListener('mousemove', _onMouseMove, false);
       //this.domElement.removeEventListener( 'mouseup', _onMouseUp, false );
 
-      window.removeEventListener( 'keydown', _onKeyDown, false );
-      window.removeEventListener( 'keyup', _onKeyUp, false );
+      window.removeEventListener('keydown', _onKeyDown, false);
+      window.removeEventListener('keyup', _onKeyUp, false);
 
     };
 
-    var _onMouseMove = bind( this, this.onMouseMove );
+    var _onMouseMove = bind(this, this.onMouseMove);
     //var _onMouseDown = bind( this, this.onMouseDown );
     //var _onMouseUp = bind( this, this.onMouseUp );
-    var _onKeyDown = bind( this, this.onKeyDown );
-    var _onKeyUp = bind( this, this.onKeyUp );
+    var _onKeyDown = bind(this, this.onKeyDown);
+    var _onKeyUp = bind(this, this.onKeyUp);
 
-    this.domElement.addEventListener( 'contextmenu', contextmenu, false );
-    this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
+    this.domElement.addEventListener('contextmenu', contextmenu, false);
+    this.domElement.addEventListener('mousemove', _onMouseMove, false);
     //this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
     //this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
 
-    window.addEventListener( 'keydown', _onKeyDown, false );
-    window.addEventListener( 'keyup', _onKeyUp, false );
+    window.addEventListener('keydown', _onKeyDown, false);
+    window.addEventListener('keyup', _onKeyUp, false);
 
-    function bind( scope, fn ) {
+    function bind(scope, fn) {
 
       return function () {
 
-        fn.apply( scope, arguments );
+        fn.apply(scope, arguments);
 
       };
 
@@ -504,17 +563,16 @@
   };
 
 
-
   var Detector = require('three/examples/js/Detector.js')
   var path = require('@/assets/three/examples/textures/minecraft/atlas.png');
- // var Detector = require('three/examples/js/Detector.js')
+  // var Detector = require('three/examples/js/Detector.js')
   var Stats = require('three/examples/js/libs/stats.min.js')
 
 
   if (!Detector.webgl) Detector.addGetWebGLMessage()
   var container
   var camera, scene, renderer
-  var person
+  var person_mesh
   var plane
   var mouse
   var raycaster
@@ -538,10 +596,7 @@
   //render()
 
 
-
-
-
-  function init () {
+  function init() {
 
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
@@ -556,7 +611,6 @@
     controls.lookVertical = true
 
 
-
     container = document.createElement('div')
     document.body.appendChild(container)
     var info = document.createElement('div')
@@ -566,20 +620,20 @@
     info.style.textAlign = 'center'
     info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
     container.appendChild(info)
-/*
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
-    camera.position.set(500, 800, 1300)
-    camera.lookAt(new THREE.Vector3())
-*/
+    /*
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
+     camera.position.set(500, 800, 1300)
+     camera.lookAt(new THREE.Vector3())
+     */
     scene = new THREE.Scene()
     // roll-over helpers
     var rollOverGeo = new THREE.BoxGeometry(50, 50, 50)
-    rollOverMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.5, transparent: true })
+    rollOverMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.5, transparent: true})
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
-    cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xfeb74c, map: new THREE.TextureLoader().load(path) })
+    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
     // grid
     var size = 500
     var step = 50
@@ -590,17 +644,25 @@
       geometry.vertices.push(new THREE.Vector3(i, 0, -size))
       geometry.vertices.push(new THREE.Vector3(i, 0, size))
     }
-    var material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2, transparent: true })
+    var material = new THREE.LineBasicMaterial({color: 0x000000, opacity: 0.2, transparent: true})
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
-    var fp_mesh = new Physijs.BoxMesh(new THREE.CubeGeometry(50, 100, 50), Physijs.createMaterial(new THREE.MeshPhongMaterial({		opacity: 0,		transparent: true	})), 1);
-    fp_mesh.position.set(camera.position.x, 0, camera.position.z);
-    scene.add(fp_mesh);    //
+
+    var person = new THREE.BoxGeometry(50, 100, 50)
+    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
+    person_mesh = new THREE.Mesh(person, personMaterial)
+    person_mesh.position.x = camera.position.x
+    person_mesh.position.y = camera.position.y - 70
+    person_mesh.position.z = camera.position.z
+
+    scene.add(person_mesh)
+
+
     raycaster = new THREE.Raycaster()
     mouse = new THREE.Vector2()
     geometry = new THREE.PlaneBufferGeometry(1000, 1000)
     geometry.rotateX(-Math.PI / 2)
-    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ visible: false }))
+    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
     // Lights
@@ -609,7 +671,7 @@
     var directionalLight = new THREE.DirectionalLight(0xffffff)
     directionalLight.position.set(1, 0.75, 0.5).normalize()
     scene.add(directionalLight)
-    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setClearColor(0xf0f0f0)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -623,54 +685,51 @@
     //container.appendChild(stats.dom)
     window.addEventListener('resize', onWindowResize, false)
 
-/*
-    renderer = new THREE.WebGLRenderer()
-    renderer.setClearColor(0xbfd1e5)
-    renderer.setPixelRatio(window.devicePixelRatio)
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    container.innerHTML = ''
-    container.appendChild(renderer.domElement)
-    */
+    /*
+     renderer = new THREE.WebGLRenderer()
+     renderer.setClearColor(0xbfd1e5)
+     renderer.setPixelRatio(window.devicePixelRatio)
+     renderer.setSize(window.innerWidth, window.innerHeight)
+     container.innerHTML = ''
+     container.appendChild(renderer.domElement)
+     */
 
     //
 
 
-
-
-
   }
-/*
-  function onWindowResize () {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-  }
-*/
-  function onWindowResize () {
+  /*
+   function onWindowResize () {
+   camera.aspect = window.innerWidth / window.innerHeight
+   camera.updateProjectionMatrix()
+   renderer.setSize(window.innerWidth, window.innerHeight)
+   }
+   */
+  function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
     controls.handleResize()
   }
-  function onDocumentMouseMove (event) {
+  function onDocumentMouseMove(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       rollOverMesh.position.copy(intersect.point).add(intersect.face.normal)
       rollOverMesh.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
     }
     render()
   }
-  function onDocumentMouseDown (event) {
+  function onDocumentMouseDown(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       // delete cube
       if (isShiftDown) {
         if (intersect.object !== plane) {
@@ -688,34 +747,38 @@
       render()
     }
   }
-  function onDocumentKeyDown (event) {
+  function onDocumentKeyDown(event) {
     switch (event.keyCode) {
-      case 16: isShiftDown = true; break
+      case 16:
+        isShiftDown = true;
+        break
     }
   }
-  function onDocumentKeyUp (event) {
+  function onDocumentKeyUp(event) {
     switch (event.keyCode) {
-      case 16: isShiftDown = false; break
+      case 16:
+        isShiftDown = false;
+        break
     }
   }
 
-  function animate () {
+  function animate() {
     requestAnimationFrame(animate)
     render()
     //document.getElementById('test').innerHTML=camera.position.z;
     //stats.update()
   }
-  function render () {
-    controls.update(clock.getDelta(),objects)
+  function render() {
+    controls.update(clock.getDelta(), objects, person_mesh)
     renderer.render(scene, camera)
   }
 
- /*
-  function render () {
-    renderer.render(scene, camera)
-  }
-*/
-  function generateHeight (width, height) {
+  /*
+   function render () {
+   renderer.render(scene, camera)
+   }
+   */
+  function generateHeight(width, height) {
 
     //import()
     //var inosie = require('three/examples/js/ImprovedNoise.js');
@@ -724,26 +787,25 @@
     var size = width * height
     var quality = 2
     var z = Math.random() * 100
-    for (var j = 0 ;j < 4; j++) {
+    for (var j = 0; j < 4; j++) {
       if (j === 0) {
-        for (var ii = 0; ii < size; ii++) data[ ii ] = 0
+        for (var ii = 0; ii < size; ii++) data[ii] = 0
       }
       for (var i = 0; i < size; i++) {
         var x = i % width
         var y = (i / width) | 0
-        data[ i ] += perlin.noise(x / quality, y / quality, z) * quality
+        data[i] += perlin.noise(x / quality, y / quality, z) * quality
       }
       quality *= 4
     }
     return data
   }
-  function getY (x, z) {
-    return (data[ x + z * worldWidth ] * 0.2) | 0
+  function getY(x, z) {
+    return (data[x + z * worldWidth] * 0.2) | 0
   }
 
 
   // http://mrl.nyu.edu/~perlin/noise/
-
 
 
 </script>

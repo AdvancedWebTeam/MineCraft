@@ -451,6 +451,11 @@
 */
 
     };
+/*
+    function collisionDetect(localVertex, directionVector){
+
+    }
+*/
 
     function contextmenu( event ) {
 

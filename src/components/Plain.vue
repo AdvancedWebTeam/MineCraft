@@ -369,8 +369,11 @@
       if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualForwardMoveSpeed + this.autoSpeedFactor ) );
       if ( this.moveBackward ) this.object.translateZ( actualBackwardMoveSpeed );
 
-      if ( this.moveLeft ) this.object.translateX( - actualLeftMoveSpeed );
-      if ( this.moveRight ) this.object.translateX( actualRightMoveSpeed );
+      if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
+      if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
+      person_mesh.position.x=this.object.position.x;
+      person_mesh.position.z=this.object.position.z;
+      person_mesh.position.y=this.object.position.y-70;
 
 /*
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
@@ -525,7 +528,7 @@
   if (!Detector.webgl) Detector.addGetWebGLMessage()
   var container
   var camera, scene, renderer
-  var person
+  var person_mesh
   var plane
   var mouse
   var raycaster
@@ -577,20 +580,20 @@
     info.style.textAlign = 'center'
     info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
     container.appendChild(info)
-/*
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
-    camera.position.set(500, 800, 1300)
-    camera.lookAt(new THREE.Vector3())
-*/
+    /*
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
+     camera.position.set(500, 800, 1300)
+     camera.lookAt(new THREE.Vector3())
+     */
     scene = new THREE.Scene()
     // roll-over helpers
     var rollOverGeo = new THREE.BoxGeometry(50, 50, 50)
-    rollOverMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.5, transparent: true })
+    rollOverMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.5, transparent: true})
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
-    cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xfeb74c, map: new THREE.TextureLoader().load(path) })
+    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
     // grid
     var size = 500
     var step = 50
@@ -601,17 +604,25 @@
       geometry.vertices.push(new THREE.Vector3(i, 0, -size))
       geometry.vertices.push(new THREE.Vector3(i, 0, size))
     }
-    var material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2, transparent: true })
+    var material = new THREE.LineBasicMaterial({color: 0x000000, opacity: 0.2, transparent: true})
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
- //   var fp_mesh = new Physijs.BoxMesh(new THREE.CubeGeometry(50, 100, 50), Physijs.createMaterial(new THREE.MeshPhongMaterial({		opacity: 0,		transparent: true	})), 1);
- //   fp_mesh.position.set(camera.position.x, 0, camera.position.z);
- //   scene.add(fp_mesh);    //
+
+    var person = new THREE.BoxGeometry(50, 100, 50)
+    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
+    person_mesh = new THREE.Mesh(person, personMaterial)
+    person_mesh.position.x = camera.position.x
+    person_mesh.position.y = camera.position.y - 70
+    person_mesh.position.z = camera.position.z
+
+    scene.add(person_mesh)
+
+
     raycaster = new THREE.Raycaster()
     mouse = new THREE.Vector2()
     geometry = new THREE.PlaneBufferGeometry(1000, 1000)
     geometry.rotateX(-Math.PI / 2)
-    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ visible: false }))
+    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
     // Lights
@@ -620,7 +631,7 @@
     var directionalLight = new THREE.DirectionalLight(0xffffff)
     directionalLight.position.set(1, 0.75, 0.5).normalize()
     scene.add(directionalLight)
-    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setClearColor(0xf0f0f0)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -634,7 +645,7 @@
     //container.appendChild(stats.dom)
     window.addEventListener('resize', onWindowResize, false)
 
-/*
+    /*
     renderer = new THREE.WebGLRenderer()
     renderer.setClearColor(0xbfd1e5)
     renderer.setPixelRatio(window.devicePixelRatio)
@@ -646,42 +657,39 @@
     //
 
 
-
-
-
   }
-/*
-  function onWindowResize () {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-  }
-*/
-  function onWindowResize () {
+  /*
+   function onWindowResize () {
+   camera.aspect = window.innerWidth / window.innerHeight
+   camera.updateProjectionMatrix()
+   renderer.setSize(window.innerWidth, window.innerHeight)
+   }
+   */
+  function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
     controls.handleResize()
   }
-  function onDocumentMouseMove (event) {
+  function onDocumentMouseMove(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       rollOverMesh.position.copy(intersect.point).add(intersect.face.normal)
       rollOverMesh.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
     }
     render()
   }
-  function onDocumentMouseDown (event) {
+  function onDocumentMouseDown(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       // delete cube
       if (isShiftDown) {
         if (intersect.object !== plane) {
@@ -699,34 +707,34 @@
       render()
     }
   }
-  function onDocumentKeyDown (event) {
+  function onDocumentKeyDown(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = true; break
     }
   }
-  function onDocumentKeyUp (event) {
+  function onDocumentKeyUp(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = false; break
     }
   }
 
-  function animate () {
+  function animate() {
     requestAnimationFrame(animate)
     render()
     //document.getElementById('test').innerHTML=camera.position.z;
     //stats.update()
   }
-  function render () {
-    controls.update(clock.getDelta(),objects)
+  function render() {
+    controls.update(clock.getDelta(), objects, person_mesh)
     renderer.render(scene, camera)
   }
 
- /*
-  function render () {
-    renderer.render(scene, camera)
-  }
-*/
-  function generateHeight (width, height) {
+  /*
+   function render () {
+   renderer.render(scene, camera)
+   }
+   */
+  function generateHeight(width, height) {
 
     //import()
     //var inosie = require('three/examples/js/ImprovedNoise.js');
@@ -754,7 +762,6 @@
 
 
   // http://mrl.nyu.edu/~perlin/noise/
-
 
 
 </script>

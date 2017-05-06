@@ -113,6 +113,7 @@
 
     this.mouseX = 0;
     this.mouseY = 0;
+    this.doViewChange = false;
 
     this.lat = 0;
     this.lon = 0;
@@ -240,6 +241,9 @@
         case 39: /*right*/
         case 68: /*D*/ this.moveRight = true; break;
 
+        case 90: /*Z*/
+              this.doViewChange = true; break;
+
 /*
         case 82: /!*R*!/ this.moveUp = true; break;
         case 70: /!*F*!/ this.moveDown = true; break;
@@ -265,6 +269,9 @@
         case 39: /*right*/
         case 68: /*D*/ this.moveRight = false; break;
 
+        case 90: /*Z*/
+            this.doViewChange = false; break;
+
 /*
         case 82: /!*R*!/ this.moveUp = false; break;
         case 70: /!*F*!/ this.moveDown = false; break;
@@ -284,6 +291,14 @@
     this.update = function( delta,oooo ) {
 
       if ( this.enabled === false ) return;
+
+
+      if (!this.doViewChange){
+          this.mouseX = 0;
+          this.mouseY = 0;
+      }
+
+
 
       if ( this.heightSpeed ) {
 
@@ -341,9 +356,9 @@
 
       var localVertex = this.object.position.clone()
       var globalVertex = targetPosition.clone()
-      var directionVector = globalVertex.sub(localVertex)
+      var directionVector = globalVertex.sub(localVertex).normalize();
 
-      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed);
+      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed+25);
       if (forwardCrash) {
         actualForwardMoveSpeed=0;
       }
@@ -352,7 +367,7 @@
       var directionVector1=directionVector.clone()
       directionVector1.x=-directionVector.x
       directionVector1.z=-directionVector.z
-      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed);
+      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed+25);
       if (backwardCrash) {
         actualBackwardMoveSpeed=0;
       }
@@ -360,7 +375,7 @@
       var directionVector2=directionVector.clone()
       directionVector2.x = directionVector.z
       directionVector2.z = -directionVector.x
-      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed);
+      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed+25);
       if (leftCrash) {
         actualLeftMoveSpeed=0;
       }
@@ -368,7 +383,7 @@
       var directionVector3=directionVector.clone()
       directionVector3.x = -directionVector.z
       directionVector3.z = directionVector.x
-      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed);
+      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed+25);
       if (rightCrash) {
         actualRightMoveSpeed=0;
       }
@@ -498,7 +513,7 @@
 
     function collisionDetect(localVertex, directionVector, oooo, checkdistance){
 
-      var bodyHalfsize = 10;
+      var bodyHalfsize = 25;
       var bodyHalfHeight = 35;
       //detect 6 points
       var normalizedDirectionVector = directionVector.clone().normalize();

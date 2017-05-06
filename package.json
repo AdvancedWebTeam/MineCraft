@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "three.js": "^0.77.1",
+    "three": "^0.85.2",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1"
   },

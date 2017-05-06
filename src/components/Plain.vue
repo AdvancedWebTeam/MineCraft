@@ -343,7 +343,7 @@
       var globalVertex = targetPosition.clone()
       var directionVector = globalVertex.sub(localVertex)
 
-      var forwardCrash = collisionDetect(localVertex, directionVector, oooo);
+      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed);
       if (forwardCrash) {
         actualForwardMoveSpeed=0;
       }
@@ -352,7 +352,7 @@
       var directionVector1=directionVector.clone()
       directionVector1.x=-directionVector.x
       directionVector1.z=-directionVector.z
-      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo);
+      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed);
       if (backwardCrash) {
         actualBackwardMoveSpeed=0;
       }
@@ -360,7 +360,7 @@
       var directionVector2=directionVector.clone()
       directionVector2.x = directionVector.z
       directionVector2.z = -directionVector.x
-      var leftCrash = collisionDetect(localVertex, directionVector2, oooo);
+      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed);
       if (leftCrash) {
         actualLeftMoveSpeed=0;
       }
@@ -368,11 +368,11 @@
       var directionVector3=directionVector.clone()
       directionVector3.x = -directionVector.z
       directionVector3.z = directionVector.x
-      var rightCrash = collisionDetect(localVertex, directionVector3, oooo);
+      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed);
       if (rightCrash) {
         actualRightMoveSpeed=0;
       }
-      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
+//      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
 
       this.object.lookAt( targetPosition );
 
@@ -383,6 +383,7 @@
       if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
 
       if (this.jumping) {
+          //alert('jumping!: falling:'+ this.falling);
           if (this.falling) {
             this.jumping = false;
           }
@@ -398,17 +399,17 @@
           }
 
       }
-      if (this.falling){
-        var downVector =  new THREE.Vector3( 0, 1, 0 )
+      if (!this.jumping){
+        var downVector =  new THREE.Vector3( 0, -1, 0 )
         var localV = localVertex.clone();
-        localV.y -= 70;
-        var downCrash = collisionDetect(localVertex, directionVector,oooo)
-        if (downCrash) this.falling == false;
-        else if (this.object.position.y <=70){
-          this.object.position.y = 70;
+        var downCrash = collisionDetect(localV, downVector,oooo, 39)
+        if ((downCrash)) this.falling = false;
+        else if (this.object.position.y <=75){
+          this.object.position.y = 75;
           this.falling = false;
         }
         else{
+            this.falling = true;
             this.object.position.y -= 5;
         }
 
@@ -416,7 +417,7 @@
       person_mesh.position.x=this.object.position.x;
       person_mesh.position.z=this.object.position.z;
       person_mesh.position.y=this.object.position.y-70;
-
+      document.getElementById('test').innerHTML = this.object.position.y;
 /*
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
       if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
@@ -480,7 +481,7 @@
 
     };
 
-    function collisionDetect(localVertex, directionVector, oooo){
+    function collisionDetect(localVertex, directionVector, oooo, checkdistance){
 
       var bodyHalfsize = 10;
       var bodyHalfHeight = 35;
@@ -503,7 +504,7 @@
         vertex.z = localVertex.z + deltaZ[i];
         var ray=new THREE.Raycaster(vertex,normalizedDirectionVector)
         var collisionResults = ray.intersectObjects(oooo)
-        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length()+34) {
+        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length()+checkdistance) {
           return true;   // crash 是一个标记变量
         }
       }

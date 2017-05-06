@@ -113,6 +113,7 @@
 
     this.mouseX = 0;
     this.mouseY = 0;
+    this.doViewChange = false;
 
     this.lat = 0;
     this.lon = 0;
@@ -123,6 +124,9 @@
     this.moveBackward = false;
     this.moveLeft = false;
     this.moveRight = false;
+    this.jumping = false;
+    this.falling = false;
+    this.jumpingHight = 0;
 
     this.mouseDragOn = false;
 
@@ -237,6 +241,9 @@
         case 39: /*right*/
         case 68: /*D*/ this.moveRight = true; break;
 
+        case 90: /*Z*/
+              this.doViewChange = true; break;
+
 /*
         case 82: /!*R*!/ this.moveUp = true; break;
         case 70: /!*F*!/ this.moveDown = true; break;
@@ -262,6 +269,9 @@
         case 39: /*right*/
         case 68: /*D*/ this.moveRight = false; break;
 
+        case 90: /*Z*/
+            this.doViewChange = false; break;
+
 /*
         case 82: /!*R*!/ this.moveUp = false; break;
         case 70: /!*F*!/ this.moveDown = false; break;
@@ -271,9 +281,24 @@
 
     };
 
+    this.onKeyPress = function(event) {
+        switch(event.keyCode){
+          case 32: /*space*/
+                this.jumping = true; break;
+        }
+    }
+
     this.update = function( delta,oooo ) {
 
       if ( this.enabled === false ) return;
+
+
+      if (!this.doViewChange){
+          this.mouseX = 0;
+          this.mouseY = 0;
+      }
+
+
 
       if ( this.heightSpeed ) {
 
@@ -321,52 +346,113 @@
       var actualMoveSpeed = delta * this.movementSpeed;
       var actualForwardMoveSpeed = actualMoveSpeed;
       var actualBackwardMoveSpeed = actualMoveSpeed;
+      var actualLeftMoveSpeed = actualMoveSpeed;
+      var actualRightMoveSpeed = actualMoveSpeed;
       var targetPosition = this.target,
         position = this.object.position
       targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
+      targetPosition.y = position.y + 100 * Math.cos( this.phi );
       targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
 
       var localVertex = this.object.position.clone()
-      localVertex.y -= 60
       var globalVertex = targetPosition.clone()
-      globalVertex.y -=60
-      var directionVector = globalVertex.sub(localVertex);
-      var forwardCrash = false
-      var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
-      var collisionResults = ray.intersectObjects(oooo)
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        forwardCrash = true;   // crash 是一个标记变量
-      }
+      var directionVector = globalVertex.sub(localVertex).normalize();
+
+      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed+25);
       if (forwardCrash) {
         actualForwardMoveSpeed=0;
       }
-      var backwardCrash = false
+
+
       var directionVector1=directionVector.clone()
       directionVector1.x=-directionVector.x
       directionVector1.z=-directionVector.z
-      var ray1=new THREE.Raycaster(localVertex,directionVector1.clone().normalize())
-      var collisionResults1 = ray1.intersectObjects(oooo)
-      if (collisionResults1.length > 0 && collisionResults1[0].distance < directionVector1.length()) {
-        backwardCrash = true;   // crash 是一个标记变量
-      }
+      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed+25);
       if (backwardCrash) {
         actualBackwardMoveSpeed=0;
       }
 
-      document.getElementById('test').innerHTML=directionVector.x+" "+directionVector.y+" "+directionVector.z;
+      var directionVector2=directionVector.clone()
+      directionVector2.x = directionVector.z
+      directionVector2.z = -directionVector.x
+      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed+25);
+      if (leftCrash) {
+        actualLeftMoveSpeed=0;
+      }
+
+      var directionVector3=directionVector.clone()
+      directionVector3.x = -directionVector.z
+      directionVector3.z = directionVector.x
+      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed+25);
+      if (rightCrash) {
+        actualRightMoveSpeed=0;
+      }
+//      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
 
       this.object.lookAt( targetPosition );
+      var nowPositionY = this.object.position.y;
 
       if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualForwardMoveSpeed + this.autoSpeedFactor ) );
       if ( this.moveBackward ) this.object.translateZ( actualBackwardMoveSpeed );
 
-      if ( this.moveLeft ) this.object.translateX( - actualMoveSpeed );
-      if ( this.moveRight ) this.object.translateX( actualMoveSpeed );
+      if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
+      if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
 
+      this.object.position.y = nowPositionY;
+
+
+      if (this.jumping) {
+          //alert('jumping!: falling:'+ this.falling);
+          if (this.falling) {
+            this.jumping = false;
+          }
+          else{
+
+            var upVector = new THREE.Vector3(0,1,0)
+            var localV = localVertex.clone();
+            var upCrash = collisionDetect(localV, upVector,oooo, 4);
+            if (upCrash) {
+              this.jumping = false;
+              this.falling = true;
+              this.jumpingHight = 0;
+            }else{
+              this.object.position.y +=5;
+              this.jumpingHight += 5;
+              if (this.jumpingHight>=60){
+                this.jumping = false;
+                this.jumpingHight = 0;
+                this.falling =true;
+              }
+            }
+
+
+          }
+
+      }
+      if (!this.jumping){
+        var downVector =  new THREE.Vector3( 0, -1, 0 )
+        var localV = localVertex.clone();
+        var downCrash = collisionDetect(localV, downVector,oooo, 39)
+        if ((downCrash)) this.falling = false;
+        else if (this.object.position.y <=75){
+          this.object.position.y = 75;
+          this.falling = false;
+        }
+        else{
+            this.falling = true;
+            this.object.position.y -= 5;
+        }
+
+      }
+      person_mesh.position.x=this.object.position.x;
+      person_mesh.position.z=this.object.position.z;
+      person_mesh.position.y=this.object.position.y-70;
+      document.getElementById('test').innerHTML = this.object.position.y;
+/*
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
       if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
-
+*/
+/*
       var actualLookSpeed = delta * this.lookSpeed;
 
       if ( ! this.activeLook ) {
@@ -396,7 +482,7 @@
           this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
 
       }
-
+*/
 /*
       var targetPosition = this.target,
         position = this.object.position
@@ -425,6 +511,38 @@
 
     };
 
+    function collisionDetect(localVertex, directionVector, oooo, checkdistance){
+
+      var bodyHalfsize = 25;
+      var bodyHalfHeight = 35;
+      //detect 6 points
+      var normalizedDirectionVector = directionVector.clone().normalize();
+
+      var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfsize;
+      var leftDeltaZ = normalizedDirectionVector.x * bodyHalfsize;
+      var rightDeltaX = normalizedDirectionVector.z * bodyHalfsize;
+      var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfsize;
+
+      var deltaX = [0, 0,               leftDeltaX, leftDeltaX,      rightDeltaX, rightDeltaX]
+      var deltaY = [0, -bodyHalfHeight, 0,          -bodyHalfHeight, 0,           -bodyHalfHeight]
+      var deltaZ = [0, 0,               leftDeltaZ, leftDeltaZ,      rightDeltaZ, rightDeltaZ]
+
+      for (var i=0; i<deltaX.length; i++){
+        var vertex = localVertex.clone();
+        vertex.x = localVertex.x + deltaX[i];
+        vertex.y = localVertex.y + deltaY[i];
+        vertex.z = localVertex.z + deltaZ[i];
+        var ray=new THREE.Raycaster(vertex,normalizedDirectionVector)
+        var collisionResults = ray.intersectObjects(oooo)
+        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length()+checkdistance) {
+          return true;   // crash 是一个标记变量
+        }
+      }
+
+      return false;
+    }
+
+
     function contextmenu( event ) {
 
       event.preventDefault();
@@ -440,6 +558,7 @@
 
       window.removeEventListener( 'keydown', _onKeyDown, false );
       window.removeEventListener( 'keyup', _onKeyUp, false );
+      window.removeEventListener( 'keypress', _onKeyPress, false);
 
     };
 
@@ -448,6 +567,7 @@
     //var _onMouseUp = bind( this, this.onMouseUp );
     var _onKeyDown = bind( this, this.onKeyDown );
     var _onKeyUp = bind( this, this.onKeyUp );
+    var _onKeyPress = bind(this, this.onKeyPress);
 
     this.domElement.addEventListener( 'contextmenu', contextmenu, false );
     this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
@@ -456,7 +576,7 @@
 
     window.addEventListener( 'keydown', _onKeyDown, false );
     window.addEventListener( 'keyup', _onKeyUp, false );
-
+    window.addEventListener( 'keypress', _onKeyPress, false);
     function bind( scope, fn ) {
 
       return function () {
@@ -474,7 +594,7 @@
 
 
   var Detector = require('three/examples/js/Detector.js')
-  var path = require('@/assets/three/examples/textures/square-outline-textured.png');
+  var path = require('@/assets/three/examples/textures/minecraft/atlas.png');
  // var Detector = require('three/examples/js/Detector.js')
   var Stats = require('three/examples/js/libs/stats.min.js')
 
@@ -482,6 +602,7 @@
   if (!Detector.webgl) Detector.addGetWebGLMessage()
   var container
   var camera, scene, renderer
+  var person_mesh
   var plane
   var mouse
   var raycaster
@@ -533,20 +654,20 @@
     info.style.textAlign = 'center'
     info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
     container.appendChild(info)
-/*
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
-    camera.position.set(500, 800, 1300)
-    camera.lookAt(new THREE.Vector3())
-*/
+    /*
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
+     camera.position.set(500, 800, 1300)
+     camera.lookAt(new THREE.Vector3())
+     */
     scene = new THREE.Scene()
     // roll-over helpers
     var rollOverGeo = new THREE.BoxGeometry(50, 50, 50)
-    rollOverMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.5, transparent: true })
+    rollOverMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.5, transparent: true})
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
-    cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xfeb74c, map: new THREE.TextureLoader().load(path) })
+    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
     // grid
     var size = 500
     var step = 50
@@ -557,15 +678,25 @@
       geometry.vertices.push(new THREE.Vector3(i, 0, -size))
       geometry.vertices.push(new THREE.Vector3(i, 0, size))
     }
-    var material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2, transparent: true })
+    var material = new THREE.LineBasicMaterial({color: 0x000000, opacity: 0.2, transparent: true})
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
-    //
+
+    var person = new THREE.BoxGeometry(50, 100, 50)
+    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
+    person_mesh = new THREE.Mesh(person, personMaterial)
+    person_mesh.position.x = camera.position.x
+    person_mesh.position.y = camera.position.y - 70
+    person_mesh.position.z = camera.position.z
+
+    scene.add(person_mesh)
+
+
     raycaster = new THREE.Raycaster()
     mouse = new THREE.Vector2()
     geometry = new THREE.PlaneBufferGeometry(1000, 1000)
     geometry.rotateX(-Math.PI / 2)
-    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ visible: false }))
+    plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
     // Lights
@@ -574,7 +705,7 @@
     var directionalLight = new THREE.DirectionalLight(0xffffff)
     directionalLight.position.set(1, 0.75, 0.5).normalize()
     scene.add(directionalLight)
-    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setClearColor(0xf0f0f0)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -588,7 +719,7 @@
     //container.appendChild(stats.dom)
     window.addEventListener('resize', onWindowResize, false)
 
-/*
+    /*
     renderer = new THREE.WebGLRenderer()
     renderer.setClearColor(0xbfd1e5)
     renderer.setPixelRatio(window.devicePixelRatio)
@@ -600,42 +731,39 @@
     //
 
 
-
-
-
   }
-/*
-  function onWindowResize () {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-  }
-*/
-  function onWindowResize () {
+  /*
+   function onWindowResize () {
+   camera.aspect = window.innerWidth / window.innerHeight
+   camera.updateProjectionMatrix()
+   renderer.setSize(window.innerWidth, window.innerHeight)
+   }
+   */
+  function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
     controls.handleResize()
   }
-  function onDocumentMouseMove (event) {
+  function onDocumentMouseMove(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       rollOverMesh.position.copy(intersect.point).add(intersect.face.normal)
       rollOverMesh.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
     }
     render()
   }
-  function onDocumentMouseDown (event) {
+  function onDocumentMouseDown(event) {
     event.preventDefault()
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
     if (intersects.length > 0) {
-      var intersect = intersects[ 0 ]
+      var intersect = intersects[0]
       // delete cube
       if (isShiftDown) {
         if (intersect.object !== plane) {
@@ -653,34 +781,34 @@
       render()
     }
   }
-  function onDocumentKeyDown (event) {
+  function onDocumentKeyDown(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = true; break
     }
   }
-  function onDocumentKeyUp (event) {
+  function onDocumentKeyUp(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = false; break
     }
   }
 
-  function animate () {
+  function animate() {
     requestAnimationFrame(animate)
     render()
     //document.getElementById('test').innerHTML=camera.position.z;
     //stats.update()
   }
-  function render () {
-    controls.update(clock.getDelta(),objects)
+  function render() {
+    controls.update(clock.getDelta(), objects, person_mesh)
     renderer.render(scene, camera)
   }
 
- /*
-  function render () {
-    renderer.render(scene, camera)
-  }
-*/
-  function generateHeight (width, height) {
+  /*
+   function render () {
+   renderer.render(scene, camera)
+   }
+   */
+  function generateHeight(width, height) {
 
     //import()
     //var inosie = require('three/examples/js/ImprovedNoise.js');
@@ -708,7 +836,6 @@
 
 
   // http://mrl.nyu.edu/~perlin/noise/
-
 
 
 </script>

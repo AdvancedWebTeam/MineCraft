@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6373bb69-41ad-43cd-b5e4-cde6e16ca568" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Plain.vue" afterPath="$PROJECT_DIR$/src/components/Plain.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="Plain.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="370" column="93" lean-forward="true" selection-start-line="370" selection-start-column="93" selection-end-line="370" selection-end-column="93" />
+            <state relative-caret-position="240">
+              <caret line="430" column="0" lean-forward="true" selection-start-line="430" selection-start-column="0" selection-end-line="430" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -84,10 +83,10 @@
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <marker date="1494053781921" expanded="true" signature="42534:42576" ph="..." />
-                <marker date="1494053781921" expanded="true" signature="42534:42594" ph="..." />
-                <marker date="1494053781921" expanded="true" signature="42534:42607" ph="..." />
-                <marker date="1494053781921" expanded="true" signature="42534:42622" ph="..." />
+                <marker date="1494054995107" expanded="true" signature="42398:42440" ph="..." />
+                <marker date="1494054995107" expanded="true" signature="42398:42458" ph="..." />
+                <marker date="1494054995107" expanded="true" signature="42398:42471" ph="..." />
+                <marker date="1494054995107" expanded="true" signature="42398:42486" ph="..." />
               </folding>
             </state>
           </provider>
@@ -413,7 +412,7 @@
       <workItem from="1493745286471" duration="18000" />
       <workItem from="1493785699248" duration="14515000" />
       <workItem from="1493991427489" duration="2285000" />
-      <workItem from="1494043918592" duration="3986000" />
+      <workItem from="1494043918592" duration="5059000" />
     </task>
     <task id="LOCAL-00001" summary="basic structure">
       <created>1493807174028</created>
@@ -433,7 +432,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83048000" />
+    <option name="totallyTimeSpent" value="84121000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1617" height="1062" extended-state="6" />
@@ -791,8 +790,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="370" column="93" lean-forward="true" selection-start-line="370" selection-start-column="93" selection-end-line="370" selection-end-column="93" />
+        <state relative-caret-position="240">
+          <caret line="430" column="0" lean-forward="true" selection-start-line="430" selection-start-column="0" selection-end-line="430" selection-end-column="0" />
           <folding />
         </state>
       </provider>

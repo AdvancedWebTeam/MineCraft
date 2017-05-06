@@ -388,13 +388,24 @@
             this.jumping = false;
           }
           else{
-            this.object.position.y +=5;
-            this.jumpingHight += 5;
-            if (this.jumpingHight>=60){
+
+            var upVector = new THREE.Vector3(0,1,0)
+            var localV = localVertex.clone();
+            var upCrash = collisionDetect(localV, upVector,oooo, 4);
+            if (upCrash) {
               this.jumping = false;
+              this.falling = true;
               this.jumpingHight = 0;
-              this.falling =true;
+            }else{
+              this.object.position.y +=5;
+              this.jumpingHight += 5;
+              if (this.jumpingHight>=60){
+                this.jumping = false;
+                this.jumpingHight = 0;
+                this.falling =true;
+              }
             }
+
 
           }
 

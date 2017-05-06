@@ -336,7 +336,7 @@
       var targetPosition = this.target,
         position = this.object.position
       targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
+      targetPosition.y = position.y + 100 * Math.cos( this.phi );
       targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
 
       var localVertex = this.object.position.clone()
@@ -375,12 +375,16 @@
 //      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
 
       this.object.lookAt( targetPosition );
+      var nowPositionY = this.object.position.y;
 
       if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualForwardMoveSpeed + this.autoSpeedFactor ) );
       if ( this.moveBackward ) this.object.translateZ( actualBackwardMoveSpeed );
 
       if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
       if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
+
+      this.object.position.y = nowPositionY;
+
 
       if (this.jumping) {
           //alert('jumping!: falling:'+ this.falling);

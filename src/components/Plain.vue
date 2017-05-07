@@ -432,7 +432,7 @@
       if (!this.jumping){
         var downVector =  new THREE.Vector3( 0, -1, 0 )
         var localV = localVertex.clone();
-        var downCrash = collisionDetect(localV, downVector,oooo, 39)
+        var downCrash = (collisionDetect(localV, downVector,oooo, 39))
         if ((downCrash)) this.falling = false;
         else if (this.object.position.y <=75){
           this.object.position.y = 75;
@@ -447,7 +447,7 @@
       person_mesh.position.x=this.object.position.x;
       person_mesh.position.z=this.object.position.z;
       person_mesh.position.y=this.object.position.y-70;
-      document.getElementById('test').innerHTML = this.object.position.y;
+//      document.getElementById('test').innerHTML = this.object.position.y;
 /*
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
       if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
@@ -647,13 +647,14 @@
 
     container = document.createElement('div')
     document.body.appendChild(container)
-    var info = document.createElement('div')
-    info.style.position = 'absolute'
-    info.style.top = '10px'
-    info.style.width = '100%'
-    info.style.textAlign = 'center'
-    info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
-    container.appendChild(info)
+
+//    var info = document.createElement('div')
+//    info.style.position = 'absolute'
+//    info.style.top = '10px'
+//    info.style.width = '100%'
+//    info.style.textAlign = 'center'
+//    info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
+//    container.appendChild(info)
     /*
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
      camera.position.set(500, 800, 1300)

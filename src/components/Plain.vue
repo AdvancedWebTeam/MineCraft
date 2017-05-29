@@ -2,10 +2,30 @@
 
 </template>
 <script>
+
+  var wsUri = 'ws://localhost:8081/websocket';
+  websocket = new WebSocket(wsUri);
+  dosend = function(){};
+  websocket.onopen = function(evt) {
+      dosend = function(data){
+          websocket.send(data);
+      };
+  };
+  websocket.onclose = function(evt) {
+      dosend = function(){};
+      websocket = new WebSocket(wsUri);
+  };
+
+
+
+
+
   var THREE = require('three')
   //$.getScript
   //include ('three/examples/js/controls/FirstPersonControls.js');
   //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
+/*
+
   var ImprovedNoise = function () {
 
     var p = [ 151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,
@@ -76,6 +96,7 @@
     }
   };
 
+*/
 
   /**
    * @author mrdoob / http://mrdoob.com/
@@ -447,6 +468,10 @@
       person_mesh.position.x=this.object.position.x;
       person_mesh.position.z=this.object.position.z;
       person_mesh.position.y=this.object.position.y-70;
+
+
+      dosend(this.object.position.x);
+
 //      document.getElementById('test').innerHTML = this.object.position.y;
 /*
       if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
@@ -591,17 +616,17 @@
 
   };
 
-
+  //require('@/socket_test/webtest.js')
 
   var Detector = require('three/examples/js/Detector.js')
   var path = require('@/assets/three/examples/textures/minecraft/atlas.png');
  // var Detector = require('three/examples/js/Detector.js')
-  var Stats = require('three/examples/js/libs/stats.min.js')
+//  var Stats = require('three/examples/js/libs/stats.min.js')
 
 
   if (!Detector.webgl) Detector.addGetWebGLMessage()
-  var container
-  var camera, scene, renderer
+/*  var container
+  var camera, scene, renderer*/
   var person_mesh
   var plane
   var mouse
@@ -611,13 +636,13 @@
   var cubeGeo, cubeMaterial
   var objects = []
 
-  var container, stats
+  var container/*, stats*/
   var camera, controls, scene, renderer
-  var worldWidth = 128
+/*  var worldWidth = 128
   var worldDepth = 128
   var worldHalfWidth = worldWidth / 2
   var worldHalfDepth = worldDepth / 2
-  var data = generateHeight(worldWidth, worldDepth)
+  var data = generateHeight(worldWidth, worldDepth)*/
   var clock = new THREE.Clock()
   document.write('<div style=\'fix\' id=\'test\'></div>')
 
@@ -809,6 +834,7 @@
    renderer.render(scene, camera)
    }
    */
+/*
   function generateHeight(width, height) {
 
     //import()
@@ -831,10 +857,15 @@
     }
     return data
   }
+
+ */
+/*
+
   function getY (x, z) {
     return (data[ x + z * worldWidth ] * 0.2) | 0
   }
 
+*/
 
   // http://mrl.nyu.edu/~perlin/noise/
 

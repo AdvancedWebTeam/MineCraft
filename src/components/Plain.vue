@@ -1,7 +1,40 @@
 <template>
-
+<!--
+  <div id="test">
+    {{currentTexture}}
+  </div>
+-->
 </template>
+
 <script>
+/*
+  var Vue=require('vue')
+  var vm=new Vue({
+    el:"#test",
+    data: {
+        currentTexture:'a'
+    }
+  })
+  vm.currentTexture='b'
+*/
+/*
+var wsUri = 'ws://10.131.251.151:8081/websocket';
+*/
+var wsUri = 'ws://localhost:8081/websocket';
+websocket = new WebSocket(wsUri);
+dosend = function(){};
+websocket.onopen = function(evt) {
+  dosend = function(data){
+    websocket.send(data);
+  };
+};
+websocket.onclose = function(evt) {
+  dosend = function(){};
+  websocket = new WebSocket(wsUri);
+};
+websocket.onerror = function(evt) {
+  websocket = new WebSocket(wsUri);
+}
   var THREE = require('three')
   //$.getScript
   //include ('three/examples/js/controls/FirstPersonControls.js');
@@ -126,6 +159,8 @@
     this.moveRight = false;
     this.jumping = false;
     this.falling = false;
+    this.rotateLeft=false;
+    this.rotateRight=false;
     this.jumpingHight = 0;
 
     this.mouseDragOn = false;
@@ -208,7 +243,6 @@
 */
 
     this.onMouseMove = function ( event ) {
-
       if ( this.domElement === document ) {
 
         this.mouseX = event.pageX - this.viewHalfX;
@@ -220,7 +254,6 @@
         this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
 
       }
-
     };
 
     this.onKeyDown = function ( event ) {
@@ -243,6 +276,12 @@
 
         case 90: /*Z*/
               this.doViewChange = true; break;
+/*
+        case  81:/!*Q*!/
+          this.rotateLeft=true;break;
+        case  69:/!*E*!/
+          this.rotateRight=true;
+*/
 
 /*
         case 82: /!*R*!/ this.moveUp = true; break;
@@ -272,10 +311,6 @@
         case 90: /*Z*/
             this.doViewChange = false; break;
 
-/*
-        case 82: /!*R*!/ this.moveUp = false; break;
-        case 70: /!*F*!/ this.moveDown = false; break;
-*/
 
       }
 
@@ -297,8 +332,6 @@
           this.mouseX = 0;
           this.mouseY = 0;
       }
-
-
 
       if ( this.heightSpeed ) {
 
@@ -447,67 +480,6 @@
       person_mesh.position.x=this.object.position.x;
       person_mesh.position.z=this.object.position.z;
       person_mesh.position.y=this.object.position.y-70;
-      document.getElementById('test').innerHTML = this.object.position.y;
-/*
-      if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
-      if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
-*/
-/*
-      var actualLookSpeed = delta * this.lookSpeed;
-
-      if ( ! this.activeLook ) {
-
-        actualLookSpeed = 0;
-
-      }
-
-      var verticalLookRatio = 1;
-
-      if ( this.constrainVertical ) {
-
-        verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
-
-      }
-
-      this.lon += this.mouseX * actualLookSpeed;
-      if ( this.lookVertical ) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
-
-      this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-      this.phi = THREE.Math.degToRad( 90 - this.lat );
-
-      this.theta = THREE.Math.degToRad( this.lon );
-
-        if ( this.constrainVertical ) {
-
-          this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
-
-      }
-*/
-/*
-      var targetPosition = this.target,
-        position = this.object.position
-      targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y //+ 100 * Math.cos( this.phi );
-      targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
-
-      var localVertex = this.object.position.clone()
-      localVertex.y -= 60
-      var globalVertex = targetPosition.clone()
-      globalVertex.y -=60
-      var directionVector = globalVertex.sub(localVertex);
-      var crash = false
-      var ray=new THREE.Raycaster(localVertex,directionVector.clone().normalize())
-      var collisionResults = ray.intersectObjects(oooo)
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        crash = true;   // crash 是一个标记变量
-      }
-      if (crash) {
-
-      }
-      document.getElementById('test').innerHTML=crash;
-
-      this.object.lookAt( targetPosition );
-*/
 
     };
 
@@ -594,8 +566,14 @@
 
 
   var Detector = require('three/examples/js/Detector.js')
-  var path = require('@/assets/three/examples/textures/minecraft/atlas.png');
- // var Detector = require('three/examples/js/Detector.js')
+  var curBlk = 0
+  var pathArr=[]
+  pathArr[0] = require('@/assets/three/examples/textures/minecraft/atlas.png');
+  pathArr[1] = require('@/assets/three/examples/textures/minecraft/dirt.png');
+  pathArr[2] = require('@/assets/three/examples/textures/minecraft/grass.png');
+  pathArr[3] = require('@/assets/three/examples/textures/minecraft/grass_dirt.png');
+  //var path=pathArr[curBlk]
+  // var Detector = require('three/examples/js/Detector.js')
   var Stats = require('three/examples/js/libs/stats.min.js')
 
 
@@ -607,6 +585,7 @@
   var mouse
   var raycaster
   var isShiftDown = false
+  var doBlkChange = false
   var rollOverMesh, rollOverMaterial
   var cubeGeo, cubeMaterial
   var objects = []
@@ -654,20 +633,33 @@
     info.style.textAlign = 'center'
     info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel'
     container.appendChild(info)
-    /*
-     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)
-     camera.position.set(500, 800, 1300)
-     camera.lookAt(new THREE.Vector3())
-     */
     scene = new THREE.Scene()
     // roll-over helpers
     var rollOverGeo = new THREE.BoxGeometry(50, 50, 50)
-    rollOverMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.5, transparent: true})
+    rollOverMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{color: 0xfeb74c, opacity:0,map: new THREE.TextureLoader().load(pathArr[0])})
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
+/*
+    if (doBlkChange) {
+      curBlk += 1
+      if (curBlk>3) {
+          curBlk = 0
+      }
+      console.log(curBlk)
+      path = pathArr[curBlk]
+    }
+*/
+    var path=pathArr[curBlk]
+    console.log(curBlk)
+    console.log(path)
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
-    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
+    var blockInfo = require('minecraft-blockinfo')
+    var minecraftBlockIdentifier = '_2'
+    blockInfo.blocks[minecraftBlockIdentifier]
+/*
+    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
+*/
     // grid
     var size = 500
     var step = 50
@@ -683,7 +675,7 @@
     scene.add(line)
 
     var person = new THREE.BoxGeometry(50, 100, 50)
-    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(path)})
+    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
     person_mesh = new THREE.Mesh(person, personMaterial)
     person_mesh.position.x = camera.position.x
     person_mesh.position.y = camera.position.y - 70
@@ -710,35 +702,16 @@
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     container.appendChild(renderer.domElement)
+    document.addEventListener('keypress',onDocumentKeyPress,false)
     document.addEventListener('mousemove', onDocumentMouseMove, false)
     document.addEventListener('mousedown', onDocumentMouseDown, false)
     document.addEventListener('keydown', onDocumentKeyDown, false)
     document.addEventListener('keyup', onDocumentKeyUp, false)
-    //
-    //stats = new Stats()
-    //container.appendChild(stats.dom)
     window.addEventListener('resize', onWindowResize, false)
 
-    /*
-    renderer = new THREE.WebGLRenderer()
-    renderer.setClearColor(0xbfd1e5)
-    renderer.setPixelRatio(window.devicePixelRatio)
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    container.innerHTML = ''
-    container.appendChild(renderer.domElement)
-    */
-
-    //
 
 
   }
-  /*
-   function onWindowResize () {
-   camera.aspect = window.innerWidth / window.innerHeight
-   camera.updateProjectionMatrix()
-   renderer.setSize(window.innerWidth, window.innerHeight)
-   }
-   */
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
@@ -762,21 +735,35 @@
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
+    console.log(objects)
     if (intersects.length > 0) {
       var intersect = intersects[0]
       // delete cube
       if (isShiftDown) {
         if (intersect.object !== plane) {
           scene.remove(intersect.object)
+          console.log(intersect.object)
           objects.splice(objects.indexOf(intersect.object), 1)
         }
         // create cube
       } else {
+        console.log(curBlk)
+        cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
+
         var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
         voxel.position.copy(intersect.point).add(intersect.face.normal)
         voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
         scene.add(voxel)
         objects.push(voxel)
+        var temp=[]
+        temp['test']=[]
+        temp['test']['action']=0
+        temp['test']['x']=voxel.position.x;
+        temp['test']['y']=voxel.position.y;
+        temp['test']['z']=voxel.position.z;
+        temp['test']['material']=curBlk;
+        console.log(JSON.stringify(temp));
+        //dosend()
       }
       render()
     }
@@ -784,12 +771,29 @@
   function onDocumentKeyDown(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = true; break
+      case 69:/*E*/ doBlkChange = true;
+        curBlk += 1;
+        if (curBlk>3) {
+          curBlk = 0
+        }
+        console.log(curBlk);
+        path = pathArr[curBlk];
+        console.log(path);
+        rollOverMaterial.map= new THREE.TextureLoader().load(path);
+        rollOverMaterial.map.needsUpdate = true;
+        break
     }
   }
   function onDocumentKeyUp(event) {
     switch (event.keyCode) {
       case 16: isShiftDown = false; break
+      case 69:/*E*/ doBlkChange = false; break
     }
+  }
+  function onDocumentKeyPress(event) {
+      switch (event.keyCode) {
+        case 69:/*E*/ doBlkChange = true; console.log("E"); break
+      }
   }
 
   function animate() {
@@ -835,245 +839,6 @@
   }
 
 
-  // http://mrl.nyu.edu/~perlin/noise/
 
 
 </script>
-<!--<template>
-&lt!&ndash
-  <div id="container"><br /><br /><br /><br /><br />Generating world...</div>
-  <div id="info"><a href="http://threejs.org" target="_blank">three.js</a> -<a href="http://www.minecraft.net/" target="_blank">minecraft</a> demo. featuring <a href="http://painterlypack.net/" target="_blank">painterly pack</a><br />(left click: forward, right click: backward)</div>
-&ndash&gt
-</template>
-
-<script>
-  var THREE = require('Three')
-  var Detector = require('Three/examples/js/Detector.js')
-  var Stats = require('Three/examples/js/libs/stats.min.js')
-  var ImprovedNoise = require('Three/examples/js/ImprovedNoise.js')
-
-  if (!Detector.webgl) {
-    Detector.addGetWebGLMessage()
-    document.getElementById('container').innerHTML = ''
-  }
-  var container, stats
-  var camera, controls, scene, renderer
-  var worldWidth = 128
-  var worldDepth = 128
-  var worldHalfWidth = worldWidth / 2
-  var worldHalfDepth = worldDepth / 2
-  var data = generateHeight(worldWidth, worldDepth)
-  var clock = new THREE.Clock()
-  init()
-  animate()
-  function init () {
-    container = document.getElementById('container')
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
-    camera.position.y = getY(worldHalfWidth, worldHalfDepth) * 100 + 100
-    controls = new THREE.FirstPersonControls(camera)
-    controls.movementSpeed = 1000
-    controls.lookSpeed = 0.125
-    controls.lookVertical = true
-    scene = new THREE.Scene()
-    // sides
-    var matrix = new THREE.Matrix4()
-    var pxGeometry = new THREE.PlaneBufferGeometry(100, 100)
-    pxGeometry.attributes.uv.array[ 1 ] = 0.5
-    pxGeometry.attributes.uv.array[ 3 ] = 0.5
-    pxGeometry.rotateY(Math.PI / 2)
-    pxGeometry.translate(50, 0, 0)
-    var nxGeometry = new THREE.PlaneBufferGeometry(100, 100)
-    nxGeometry.attributes.uv.array[ 1 ] = 0.5
-    nxGeometry.attributes.uv.array[ 3 ] = 0.5
-    nxGeometry.rotateY(-Math.PI / 2)
-    nxGeometry.translate(-50, 0, 0)
-    var pyGeometry = new THREE.PlaneBufferGeometry(100, 100)
-    pyGeometry.attributes.uv.array[ 5 ] = 0.5
-    pyGeometry.attributes.uv.array[ 7 ] = 0.5
-    pyGeometry.rotateX(-Math.PI / 2)
-    pyGeometry.translate(0, 50, 0)
-    var pzGeometry = new THREE.PlaneBufferGeometry(100, 100)
-    pzGeometry.attributes.uv.array[ 1 ] = 0.5
-    pzGeometry.attributes.uv.array[ 3 ] = 0.5
-    pzGeometry.translate(0, 0, 50)
-    var nzGeometry = new THREE.PlaneBufferGeometry(100, 100)
-    nzGeometry.attributes.uv.array[ 1 ] = 0.5
-    nzGeometry.attributes.uv.array[ 3 ] = 0.5
-    nzGeometry.rotateY(Math.PI)
-    nzGeometry.translate(0, 0, -50)
-    //
-    // BufferGeometry cannot be merged yet.
-    var tmpGeometry = new THREE.Geometry()
-    var pxTmpGeometry = new THREE.Geometry().fromBufferGeometry(pxGeometry)
-    var nxTmpGeometry = new THREE.Geometry().fromBufferGeometry(nxGeometry)
-    var pyTmpGeometry = new THREE.Geometry().fromBufferGeometry(pyGeometry)
-    var pzTmpGeometry = new THREE.Geometry().fromBufferGeometry(pzGeometry)
-    var nzTmpGeometry = new THREE.Geometry().fromBufferGeometry(nzGeometry)
-    for (var z = 0 z < worldDepth z++) {
-      for (var x = 0 x < worldWidth x++) {
-        var h = getY(x, z)
-        matrix.makeTranslation(
-          x * 100 - worldHalfWidth * 100,
-          h * 100,
-          z * 100 - worldHalfDepth * 100
-      )
-        var px = getY(x + 1, z)
-        var nx = getY(x - 1, z)
-        var pz = getY(x, z + 1)
-        var nz = getY(x, z - 1)
-        tmpGeometry.merge(pyTmpGeometry, matrix)
-        if ((px !== h && px !== h + 1) || x === 0) {
-          tmpGeometry.merge(pxTmpGeometry, matrix)
-        }
-        if ((nx !== h && nx !== h + 1) || x === worldWidth - 1) {
-          tmpGeometry.merge(nxTmpGeometry, matrix)
-        }
-        if ((pz !== h && pz !== h + 1) || z === worldDepth - 1) {
-          tmpGeometry.merge(pzTmpGeometry, matrix)
-        }
-        if ((nz !== h && nz !== h + 1) || z === 0) {
-          tmpGeometry.merge(nzTmpGeometry, matrix)
-        }
-      }
-    }
-    var geometry = new THREE.BufferGeometry().fromGeometry(tmpGeometry)
-    geometry.computeBoundingSphere()
-    var texture = new THREE.TextureLoader().load('textures/minecraft/atlas.png')
-    texture.magFilter = THREE.NearestFilter
-    texture.minFilter = THREE.LinearMipMapLinearFilter
-    var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ map: texture }))
-    scene.add(mesh)
-    var ambientLight = new THREE.AmbientLight(0xcccccc)
-    scene.add(ambientLight)
-    var directionalLight = new THREE.DirectionalLight(0xffffff, 2)
-    directionalLight.position.set(1, 1, 0.5).normalize()
-    scene.add(directionalLight)
-    renderer = new THREE.WebGLRenderer()
-    renderer.setClearColor(0xbfd1e5)
-    renderer.setPixelRatio(window.devicePixelRatio)
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    container.innerHTML = ''
-    container.appendChild(renderer.domElement)
-    stats = new Stats()
-    container.appendChild(stats.dom)
-    //
-    window.addEventListener('resize', onWindowResize, false)
-  }
-  function onWindowResize () {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    controls.handleResize()
-  }
-  function generateHeight (width, height) {
-    var data = []
-    var perlin = new ImprovedNoise()
-    var size = width * height
-    var quality = 2
-    var z = Math.random() * 100
-    for (var j = 0 j < 4 j++) {
-      if (j === 0) {
-        for (var ii = 0 ii < size ii++) data[ ii ] = 0
-      }
-      for (var i = 0 i < size i++) {
-        var x = i % width
-        var y = (i / width) | 0
-        data[ i ] += perlin.noise(x / quality, y / quality, z) * quality
-      }
-      quality *= 4
-    }
-    return data
-  }
-  function getY (x, z) {
-    return (data[ x + z * worldWidth ] * 0.2) | 0
-  }
-  //
-  function animate () {
-    requestAnimationFrame(animate)
-    render()
-    stats.update()
-  }
-  function render () {
-    controls.update(clock.getDelta())
-    renderer.render(scene, camera)
-  }
-</script>
-
-<style>
-  body {
-    color: #61443e
-    font-family:Monospace
-    font-size:13px
-    text-align:center
-    background-color: #bfd1e5
-    margin: 0px
-    overflow: hidden
-  }
-  #info {
-    position: absolute
-    top: 0px width: 100%
-    padding: 5px
-  }
-  a {
-    color: #a06851
-  }
-  #oldie {
-    background:rgb(100,0,0) !important
-    color:#fff !important
-    margin-top:10em !important
-  }
-  #oldie a { color:#fff }
-</style>-->
-<!--
-<template>
-
-</template>
-
-<script>
-    var path = require('@/assets/three/examples/textures/crate.gif')
-    var THREE = require('Three')
-    var camera, scene, renderer
-    var mesh
-    init()
-    animate()
-    function init () {
-      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000)
-      camera.position.z = 400
-      scene = new THREE.Scene()
-      var texture = new THREE.TextureLoader().load(path)
-      var geometry = new THREE.BoxBufferGeometry(200, 200, 200)
-      var material = new THREE.MeshBasicMaterial({map: texture})
-      mesh = new THREE.Mesh(geometry, material)
-      scene.add(mesh)
-      renderer = new THREE.WebGLRenderer()
-      renderer.setPixelRatio(window.devicePixelRatio)
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      document.body.appendChild(renderer.domElement)
-      //
-      window.addEventListener('resize', onWindowResize, false)
-    }
-
-    function onWindowResize () {
-      camera.aspect = window.innerWidth / window.innerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-    }
-
-    function animate () {
-      requestAnimationFrame(animate)
-      mesh.rotation.x += 0.005
-      mesh.rotation.y += 0.01
-      renderer.render(scene, camera)
-    }
-
-</script>
-
-<style>
-  body {
-    margin: 0px
-    background-color: #000000
-    overflow: hidden
-  }
-</style>
-
--->

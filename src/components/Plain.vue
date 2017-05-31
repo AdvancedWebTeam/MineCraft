@@ -3,7 +3,7 @@
 </template>
 <script>
 
-  var wsUri = 'ws://localhost:8081/websocket';
+  var wsUri = 'ws://10.131.251.151:8081/websocket';
   websocket = new WebSocket(wsUri);
   dosend = function(){};
   websocket.onopen = function(evt) {
@@ -15,6 +15,9 @@
       dosend = function(){};
       websocket = new WebSocket(wsUri);
   };
+  websocket.onerror = function(evt) {
+      websocket = new WebSocket(wsUri);
+  }
 
 
 

@@ -1,58 +1,94 @@
 <template>
-<!--
-  <div id="test">
-    {{currentTexture}}
-  </div>
--->
+  <!--
+    <div id="test">
+      {{currentTexture}}
+    </div>
+  -->
 </template>
 
 <script>
-/*
-  var Vue=require('vue')
-  var vm=new Vue({
-    el:"#test",
-    data: {
-        currentTexture:'a'
-    }
-  })
-  vm.currentTexture='b'
-*/
-/*
-var wsUri = 'ws://10.131.251.151:8081/websocket';
-*/
-var wsUri = 'ws://localhost:8081/websocket';
-websocket = new WebSocket(wsUri);
-dosend = function(){};
-websocket.onopen = function(evt) {
-  dosend = function(data){
-    websocket.send(data);
+  /*
+   var Vue=require('vue')
+   var vm=new Vue({
+   el:"#test",
+   data: {
+   currentTexture:'a'
+   }
+   })
+   vm.currentTexture='b'
+   */
+  /*
+   var wsUri = 'ws://10.131.251.151:8081/websocket';
+   */
+  var wsUri = 'ws://10.131.251.151:8081/websocket';
+  var websocket = new WebSocket(wsUri);
+  var dosend = function () {
   };
-};
-websocket.onclose = function(evt) {
-  dosend = function(){};
-  websocket = new WebSocket(wsUri);
-};
-websocket.onerror = function(evt) {
-  websocket = new WebSocket(wsUri);
-}
+  websocket.onopen = function (evt) {
+    dosend = function (data) {
+      websocket.send(data);
+    };
+  };
+  websocket.onclose = function (evt) {
+    dosend = function () {
+    };
+    websocket = new WebSocket(wsUri);
+  };
+  websocket.onerror = function (evt) {
+    websocket = new WebSocket(wsUri);
+  }
+  websocket.onmessage = function (evt) {
+    onMessage(evt)
+  };
+  function onMessage(evt) {
+    //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
+    var obj = JSON.parse(evt.data);
+    console.log(obj.test.action)
+    if (obj.test.action == 0) {
+      //console.log('test')
+      cubeMaterial = new THREE.MeshLambertMaterial({
+        color: 0xfeb74c,
+        map: new THREE.TextureLoader().load(pathArr[obj.test.material])
+      })
+      var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
+      voxel.position.x = obj.test.x;
+      voxel.position.y = obj.test.y;
+      voxel.position.z = obj.test.z;
+      scene.add(voxel)
+      objects.push(voxel)
+      console.log(objects)
+
+    } else if (obj.test.action == 1) {
+      for (var i = 0; i < objects.length; i++) {
+        console.log(objects[i].position.x)
+        if ((objects[i].position.x == obj.test.x) && (objects[i].position.y == obj.test.y) && (objects[i].position.z == obj.test.z)) {
+          scene.remove(objects[i])
+          objects.splice(i, 1)
+        }
+      }
+    }
+    render()
+    //websocket.close();
+  }
+  /*dosend(1)*/
   var THREE = require('three')
   //$.getScript
   //include ('three/examples/js/controls/FirstPersonControls.js');
   //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
   var ImprovedNoise = function () {
 
-    var p = [ 151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,
-      23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,
-      174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,
-      133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,
-      89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,
-      202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,
-      248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,
-      178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,
-      14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,
-      93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 ];
+    var p = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10,
+      23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87,
+      174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211,
+      133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208,
+      89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5,
+      202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119,
+      248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232,
+      178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249,
+      14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205,
+      93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
 
-    for (var i = 0; i < 256 ; i ++) {
+    for (var i = 0; i < 256; i++) {
 
       p[256 + i] = p[i];
 
@@ -74,7 +110,7 @@ websocket.onerror = function(evt) {
 
       var h = hash & 15;
       var u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-      return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
+      return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 
     }
 
@@ -116,10 +152,10 @@ websocket.onerror = function(evt) {
    * @author paulirish / http://paulirish.com/
    */
 
-  THREE.FirstPersonControls = function ( object, domElement ) {
+  THREE.FirstPersonControls = function (object, domElement) {
 
     this.object = object;
-    this.target = new THREE.Vector3( 0, 0, 0 );
+    this.target = new THREE.Vector3(0, 0, 0);
 
     this.domElement = ( domElement !== undefined ) ? domElement : document;
 
@@ -159,8 +195,8 @@ websocket.onerror = function(evt) {
     this.moveRight = false;
     this.jumping = false;
     this.falling = false;
-    this.rotateLeft=false;
-    this.rotateRight=false;
+    this.rotateLeft = false;
+    this.rotateRight = false;
     this.jumpingHight = 0;
 
     this.mouseDragOn = false;
@@ -168,9 +204,9 @@ websocket.onerror = function(evt) {
     this.viewHalfX = 0;
     this.viewHalfY = 0;
 
-    if ( this.domElement !== document ) {
+    if (this.domElement !== document) {
 
-      this.domElement.setAttribute( 'tabindex', - 1 );
+      this.domElement.setAttribute('tabindex', -1);
 
     }
 
@@ -178,7 +214,7 @@ websocket.onerror = function(evt) {
 
     this.handleResize = function () {
 
-      if ( this.domElement === document ) {
+      if (this.domElement === document) {
 
         this.viewHalfX = window.innerWidth / 2;
         this.viewHalfY = window.innerHeight / 2;
@@ -192,58 +228,58 @@ websocket.onerror = function(evt) {
 
     };
 
-/*
-    this.onMouseDown = function ( event ) {
+    /*
+     this.onMouseDown = function ( event ) {
 
-      if ( this.domElement !== document ) {
+     if ( this.domElement !== document ) {
 
-        this.domElement.focus();
+     this.domElement.focus();
 
-      }
+     }
 
-      event.preventDefault();
-      event.stopPropagation();
+     event.preventDefault();
+     event.stopPropagation();
 
-      if ( this.activeLook ) {
+     if ( this.activeLook ) {
 
-        switch ( event.button ) {
+     switch ( event.button ) {
 
-          case 0: this.moveForward = true; break;
-          case 2: this.moveBackward = true; break;
+     case 0: this.moveForward = true; break;
+     case 2: this.moveBackward = true; break;
 
-        }
+     }
 
-      }
+     }
 
-      this.mouseDragOn = true;
+     this.mouseDragOn = true;
 
-    };
-*/
+     };
+     */
 
-/*
-    this.onMouseUp = function ( event ) {
+    /*
+     this.onMouseUp = function ( event ) {
 
-      event.preventDefault();
-      event.stopPropagation();
+     event.preventDefault();
+     event.stopPropagation();
 
-      if ( this.activeLook ) {
+     if ( this.activeLook ) {
 
-        switch ( event.button ) {
+     switch ( event.button ) {
 
-          case 0: this.moveForward = false; break;
-          case 2: this.moveBackward = false; break;
+     case 0: this.moveForward = false; break;
+     case 2: this.moveBackward = false; break;
 
-        }
+     }
 
-      }
+     }
 
-      this.mouseDragOn = false;
+     this.mouseDragOn = false;
 
-    };
-*/
+     };
+     */
 
-    this.onMouseMove = function ( event ) {
-      if ( this.domElement === document ) {
+    this.onMouseMove = function (event) {
+      if (this.domElement === document) {
 
         this.mouseX = event.pageX - this.viewHalfX;
         this.mouseY = event.pageY - this.viewHalfY;
@@ -256,86 +292,105 @@ websocket.onerror = function(evt) {
       }
     };
 
-    this.onKeyDown = function ( event ) {
+    this.onKeyDown = function (event) {
 
       //event.preventDefault();
 
-      switch ( event.keyCode ) {
+      switch (event.keyCode) {
 
         case 38: /*up*/
-        case 87: /*W*/ this.moveForward = true; break;
+        case 87: /*W*/
+          this.moveForward = true;
+          break;
 
         case 37: /*left*/
-        case 65: /*A*/ this.moveLeft = true; break;
+        case 65: /*A*/
+          this.moveLeft = true;
+          break;
 
         case 40: /*down*/
-        case 83: /*S*/ this.moveBackward = true; break;
+        case 83: /*S*/
+          this.moveBackward = true;
+          break;
 
         case 39: /*right*/
-        case 68: /*D*/ this.moveRight = true; break;
+        case 68: /*D*/
+          this.moveRight = true;
+          break;
 
         case 90: /*Z*/
-              this.doViewChange = true; break;
-/*
-        case  81:/!*Q*!/
-          this.rotateLeft=true;break;
-        case  69:/!*E*!/
-          this.rotateRight=true;
-*/
+          this.doViewChange = true;
+          break;
+        /*
+         case  81:/!*Q*!/
+         this.rotateLeft=true;break;
+         case  69:/!*E*!/
+         this.rotateRight=true;
+         */
 
-/*
-        case 82: /!*R*!/ this.moveUp = true; break;
-        case 70: /!*F*!/ this.moveDown = true; break;
-*/
+        /*
+         case 82: /!*R*!/ this.moveUp = true; break;
+         case 70: /!*F*!/ this.moveDown = true; break;
+         */
 
       }
 
     };
 
-    this.onKeyUp = function ( event ) {
+    this.onKeyUp = function (event) {
 
-      switch ( event.keyCode ) {
+      switch (event.keyCode) {
 
         case 38: /*up*/
-        case 87: /*W*/ this.moveForward = false; break;
+        case 87: /*W*/
+          this.moveForward = false;
+          break;
 
         case 37: /*left*/
-        case 65: /*A*/ this.moveLeft = false; break;
+        case 65: /*A*/
+          this.moveLeft = false;
+          break;
 
         case 40: /*down*/
-        case 83: /*S*/ this.moveBackward = false; break;
+        case 83: /*S*/
+          this.moveBackward = false;
+          break;
 
         case 39: /*right*/
-        case 68: /*D*/ this.moveRight = false; break;
+        case 68: /*D*/
+          this.moveRight = false;
+          break;
 
         case 90: /*Z*/
-            this.doViewChange = false; break;
+          this.doViewChange = false;
+          break;
 
 
       }
 
     };
 
-    this.onKeyPress = function(event) {
-        switch(event.keyCode){
-          case 32: /*space*/
-                this.jumping = true; break;
-        }
+    this.onKeyPress = function (event) {
+      switch (event.keyCode) {
+        case 32: /*space*/
+          this.jumping = true;
+          break;
+      }
     }
 
-    this.update = function( delta,oooo ) {
+    this.update = function (delta, oooo) {
 
-      if ( this.enabled === false ) return;
+      if (this.enabled === false) return;
 
 
-      if (!this.doViewChange){
-          this.mouseX = 0;
-          this.mouseY = 0;
+      if (!this.doViewChange) {
+        this.mouseX = 0;
+        this.mouseY = 0;
       }
 
-      if ( this.heightSpeed ) {
+      if (this.heightSpeed) {
 
-        var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
+        var y = THREE.Math.clamp(this.object.position.y, this.heightMin, this.heightMax);
         var heightDelta = y - this.heightMin;
 
         this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
@@ -348,7 +403,7 @@ websocket.onerror = function(evt) {
 
       var actualLookSpeed = delta * this.lookSpeed;
 
-      if ( ! this.activeLook ) {
+      if (!this.activeLook) {
 
         actualLookSpeed = 0;
 
@@ -356,23 +411,23 @@ websocket.onerror = function(evt) {
 
       var verticalLookRatio = 1;
 
-      if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
         verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
 
       }
 
       this.lon += this.mouseX * actualLookSpeed;
-      if ( this.lookVertical ) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
+      if (this.lookVertical) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
 
-      this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-      this.phi = THREE.Math.degToRad( 90 - this.lat );
+      this.lat = Math.max(-85, Math.min(85, this.lat));
+      this.phi = THREE.Math.degToRad(90 - this.lat);
 
-      this.theta = THREE.Math.degToRad( this.lon );
+      this.theta = THREE.Math.degToRad(this.lon);
 
-      if ( this.constrainVertical ) {
+      if (this.constrainVertical) {
 
-        this.phi = THREE.Math.mapLinear( this.phi, 0, Math.PI, this.verticalMin, this.verticalMax );
+        this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
 
       }
 
@@ -383,50 +438,50 @@ websocket.onerror = function(evt) {
       var actualRightMoveSpeed = actualMoveSpeed;
       var targetPosition = this.target,
         position = this.object.position
-      targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-      targetPosition.y = position.y + 100 * Math.cos( this.phi );
-      targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+      targetPosition.x = position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
+      targetPosition.y = position.y + 100 * Math.cos(this.phi);
+      targetPosition.z = position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
 
       var localVertex = this.object.position.clone()
       var globalVertex = targetPosition.clone()
       var directionVector = globalVertex.sub(localVertex).normalize();
 
-      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed+25);
+      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed + 25);
       if (forwardCrash) {
-        actualForwardMoveSpeed=0;
+        actualForwardMoveSpeed = 0;
       }
 
 
-      var directionVector1=directionVector.clone()
-      directionVector1.x=-directionVector.x
-      directionVector1.z=-directionVector.z
-      var  backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed+25);
+      var directionVector1 = directionVector.clone()
+      directionVector1.x = -directionVector.x
+      directionVector1.z = -directionVector.z
+      var backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed + 25);
       if (backwardCrash) {
-        actualBackwardMoveSpeed=0;
+        actualBackwardMoveSpeed = 0;
       }
 
-      var directionVector2=directionVector.clone()
+      var directionVector2 = directionVector.clone()
       directionVector2.x = directionVector.z
       directionVector2.z = -directionVector.x
-      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed+25);
+      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed + 25);
       if (leftCrash) {
-        actualLeftMoveSpeed=0;
+        actualLeftMoveSpeed = 0;
       }
 
-      var directionVector3=directionVector.clone()
+      var directionVector3 = directionVector.clone()
       directionVector3.x = -directionVector.z
       directionVector3.z = directionVector.x
-      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed+25);
+      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed + 25);
       if (rightCrash) {
-        actualRightMoveSpeed=0;
+        actualRightMoveSpeed = 0;
       }
 //      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
 
-      this.object.lookAt( targetPosition );
+      this.object.lookAt(targetPosition);
       var nowPositionY = this.object.position.y;
 
-      if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualForwardMoveSpeed + this.autoSpeedFactor ) );
-      if ( this.moveBackward ) this.object.translateZ( actualBackwardMoveSpeed );
+      if (this.moveForward || ( this.autoForward && !this.moveBackward )) this.object.translateZ(-( actualForwardMoveSpeed + this.autoSpeedFactor ));
+      if (this.moveBackward) this.object.translateZ(actualBackwardMoveSpeed);
 
       if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
       if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
@@ -435,55 +490,55 @@ websocket.onerror = function(evt) {
 
 
       if (this.jumping) {
-          //alert('jumping!: falling:'+ this.falling);
-          if (this.falling) {
+        //alert('jumping!: falling:'+ this.falling);
+        if (this.falling) {
+          this.jumping = false;
+        }
+        else {
+
+          var upVector = new THREE.Vector3(0, 1, 0)
+          var localV = localVertex.clone();
+          var upCrash = collisionDetect(localV, upVector, oooo, 4);
+          if (upCrash) {
             this.jumping = false;
-          }
-          else{
-
-            var upVector = new THREE.Vector3(0,1,0)
-            var localV = localVertex.clone();
-            var upCrash = collisionDetect(localV, upVector,oooo, 4);
-            if (upCrash) {
+            this.falling = true;
+            this.jumpingHight = 0;
+          } else {
+            this.object.position.y += 5;
+            this.jumpingHight += 5;
+            if (this.jumpingHight >= 60) {
               this.jumping = false;
-              this.falling = true;
               this.jumpingHight = 0;
-            }else{
-              this.object.position.y +=5;
-              this.jumpingHight += 5;
-              if (this.jumpingHight>=60){
-                this.jumping = false;
-                this.jumpingHight = 0;
-                this.falling =true;
-              }
+              this.falling = true;
             }
-
-
           }
+
+
+        }
 
       }
-      if (!this.jumping){
-        var downVector =  new THREE.Vector3( 0, -1, 0 )
+      if (!this.jumping) {
+        var downVector = new THREE.Vector3(0, -1, 0)
         var localV = localVertex.clone();
-        var downCrash = collisionDetect(localV, downVector,oooo, 39)
+        var downCrash = collisionDetect(localV, downVector, oooo, 39)
         if ((downCrash)) this.falling = false;
-        else if (this.object.position.y <=75){
+        else if (this.object.position.y <= 75) {
           this.object.position.y = 75;
           this.falling = false;
         }
-        else{
-            this.falling = true;
-            this.object.position.y -= 5;
+        else {
+          this.falling = true;
+          this.object.position.y -= 5;
         }
 
       }
-      person_mesh.position.x=this.object.position.x;
-      person_mesh.position.z=this.object.position.z;
-      person_mesh.position.y=this.object.position.y-70;
+      person_mesh.position.x = this.object.position.x;
+      person_mesh.position.z = this.object.position.z;
+      person_mesh.position.y = this.object.position.y - 70;
 
     };
 
-    function collisionDetect(localVertex, directionVector, oooo, checkdistance){
+    function collisionDetect(localVertex, directionVector, oooo, checkdistance) {
 
       var bodyHalfsize = 25;
       var bodyHalfHeight = 35;
@@ -495,18 +550,18 @@ websocket.onerror = function(evt) {
       var rightDeltaX = normalizedDirectionVector.z * bodyHalfsize;
       var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfsize;
 
-      var deltaX = [0, 0,               leftDeltaX, leftDeltaX,      rightDeltaX, rightDeltaX]
-      var deltaY = [0, -bodyHalfHeight, 0,          -bodyHalfHeight, 0,           -bodyHalfHeight]
-      var deltaZ = [0, 0,               leftDeltaZ, leftDeltaZ,      rightDeltaZ, rightDeltaZ]
+      var deltaX = [0, 0, leftDeltaX, leftDeltaX, rightDeltaX, rightDeltaX]
+      var deltaY = [0, -bodyHalfHeight, 0, -bodyHalfHeight, 0, -bodyHalfHeight]
+      var deltaZ = [0, 0, leftDeltaZ, leftDeltaZ, rightDeltaZ, rightDeltaZ]
 
-      for (var i=0; i<deltaX.length; i++){
+      for (var i = 0; i < deltaX.length; i++) {
         var vertex = localVertex.clone();
         vertex.x = localVertex.x + deltaX[i];
         vertex.y = localVertex.y + deltaY[i];
         vertex.z = localVertex.z + deltaZ[i];
-        var ray=new THREE.Raycaster(vertex,normalizedDirectionVector)
+        var ray = new THREE.Raycaster(vertex, normalizedDirectionVector)
         var collisionResults = ray.intersectObjects(oooo)
-        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length()+checkdistance) {
+        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length() + checkdistance) {
           return true;   // crash 是一个标记变量
         }
       }
@@ -515,45 +570,45 @@ websocket.onerror = function(evt) {
     }
 
 
-    function contextmenu( event ) {
+    function contextmenu(event) {
 
       event.preventDefault();
 
     }
 
-    this.dispose = function() {
+    this.dispose = function () {
 
-      this.domElement.removeEventListener( 'contextmenu', contextmenu, false );
+      this.domElement.removeEventListener('contextmenu', contextmenu, false);
       //this.domElement.removeEventListener( 'mousedown', _onMouseDown, false );
-      this.domElement.removeEventListener( 'mousemove', _onMouseMove, false );
+      this.domElement.removeEventListener('mousemove', _onMouseMove, false);
       //this.domElement.removeEventListener( 'mouseup', _onMouseUp, false );
 
-      window.removeEventListener( 'keydown', _onKeyDown, false );
-      window.removeEventListener( 'keyup', _onKeyUp, false );
-      window.removeEventListener( 'keypress', _onKeyPress, false);
+      window.removeEventListener('keydown', _onKeyDown, false);
+      window.removeEventListener('keyup', _onKeyUp, false);
+      window.removeEventListener('keypress', _onKeyPress, false);
 
     };
 
-    var _onMouseMove = bind( this, this.onMouseMove );
+    var _onMouseMove = bind(this, this.onMouseMove);
     //var _onMouseDown = bind( this, this.onMouseDown );
     //var _onMouseUp = bind( this, this.onMouseUp );
-    var _onKeyDown = bind( this, this.onKeyDown );
-    var _onKeyUp = bind( this, this.onKeyUp );
+    var _onKeyDown = bind(this, this.onKeyDown);
+    var _onKeyUp = bind(this, this.onKeyUp);
     var _onKeyPress = bind(this, this.onKeyPress);
 
-    this.domElement.addEventListener( 'contextmenu', contextmenu, false );
-    this.domElement.addEventListener( 'mousemove', _onMouseMove, false );
+    this.domElement.addEventListener('contextmenu', contextmenu, false);
+    this.domElement.addEventListener('mousemove', _onMouseMove, false);
     //this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
     //this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
 
-    window.addEventListener( 'keydown', _onKeyDown, false );
-    window.addEventListener( 'keyup', _onKeyUp, false );
-    window.addEventListener( 'keypress', _onKeyPress, false);
-    function bind( scope, fn ) {
+    window.addEventListener('keydown', _onKeyDown, false);
+    window.addEventListener('keyup', _onKeyUp, false);
+    window.addEventListener('keypress', _onKeyPress, false);
+    function bind(scope, fn) {
 
       return function () {
 
-        fn.apply( scope, arguments );
+        fn.apply(scope, arguments);
 
       };
 
@@ -564,10 +619,9 @@ websocket.onerror = function(evt) {
   };
 
 
-
   var Detector = require('three/examples/js/Detector.js')
   var curBlk = 0
-  var pathArr=[]
+  var pathArr = []
   pathArr[0] = require('@/assets/three/examples/textures/minecraft/atlas.png');
   pathArr[1] = require('@/assets/three/examples/textures/minecraft/dirt.png');
   pathArr[2] = require('@/assets/three/examples/textures/minecraft/grass.png');
@@ -598,6 +652,7 @@ websocket.onerror = function(evt) {
   var worldHalfDepth = worldDepth / 2
   var data = generateHeight(worldWidth, worldDepth)
   var clock = new THREE.Clock()
+  var path
   document.write('<div style=\'fix\' id=\'test\'></div>')
 
   init()
@@ -605,10 +660,7 @@ websocket.onerror = function(evt) {
   //render()
 
 
-
-
-
-  function init () {
+  function init() {
 
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
@@ -623,7 +675,6 @@ websocket.onerror = function(evt) {
     controls.lookVertical = true
 
 
-
     container = document.createElement('div')
     document.body.appendChild(container)
     var info = document.createElement('div')
@@ -636,20 +687,24 @@ websocket.onerror = function(evt) {
     scene = new THREE.Scene()
     // roll-over helpers
     var rollOverGeo = new THREE.BoxGeometry(50, 50, 50)
-    rollOverMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{color: 0xfeb74c, opacity:0,map: new THREE.TextureLoader().load(pathArr[0])})
+    rollOverMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
+      color: 0xfeb74c,
+      opacity: 0,
+      map: new THREE.TextureLoader().load(pathArr[0])
+    })
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
-/*
-    if (doBlkChange) {
-      curBlk += 1
-      if (curBlk>3) {
-          curBlk = 0
-      }
-      console.log(curBlk)
-      path = pathArr[curBlk]
-    }
-*/
-    var path=pathArr[curBlk]
+    /*
+     if (doBlkChange) {
+     curBlk += 1
+     if (curBlk>3) {
+     curBlk = 0
+     }
+     console.log(curBlk)
+     path = pathArr[curBlk]
+     }
+     */
+    path = pathArr[curBlk]
     console.log(curBlk)
     console.log(path)
     // cubes
@@ -657,9 +712,9 @@ websocket.onerror = function(evt) {
     var blockInfo = require('minecraft-blockinfo')
     var minecraftBlockIdentifier = '_2'
     blockInfo.blocks[minecraftBlockIdentifier]
-/*
-    cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
-*/
+    /*
+     cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
+     */
     // grid
     var size = 500
     var step = 50
@@ -702,13 +757,12 @@ websocket.onerror = function(evt) {
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     container.appendChild(renderer.domElement)
-    document.addEventListener('keypress',onDocumentKeyPress,false)
+    document.addEventListener('keypress', onDocumentKeyPress, false)
     document.addEventListener('mousemove', onDocumentMouseMove, false)
     document.addEventListener('mousedown', onDocumentMouseDown, false)
     document.addEventListener('keydown', onDocumentKeyDown, false)
     document.addEventListener('keyup', onDocumentKeyUp, false)
     window.addEventListener('resize', onWindowResize, false)
-
 
 
   }
@@ -741,6 +795,16 @@ websocket.onerror = function(evt) {
       // delete cube
       if (isShiftDown) {
         if (intersect.object !== plane) {
+          var temp = {}
+          temp['test'] = {}
+          temp['test']['action'] = 1
+          temp['test']['x'] = intersect.object.position.x
+          temp['test']['y'] = intersect.object.position.y
+          temp['test']['z'] = intersect.object.position.z
+          temp['test']['material'] = curBlk
+          console.log(temp)
+          console.log(JSON.stringify(temp))
+          dosend(JSON.stringify(temp))
           scene.remove(intersect.object)
           console.log(intersect.object)
           objects.splice(objects.indexOf(intersect.object), 1)
@@ -748,52 +812,84 @@ websocket.onerror = function(evt) {
         // create cube
       } else {
         console.log(curBlk)
-        cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
+        cubeMaterial = new THREE.MeshLambertMaterial({
+          color: 0xfeb74c,
+          map: new THREE.TextureLoader().load(pathArr[curBlk])
+        })
 
         var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
         voxel.position.copy(intersect.point).add(intersect.face.normal)
         voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
         scene.add(voxel)
         objects.push(voxel)
-        var temp=[]
-        temp['test']=[]
-        temp['test']['action']=0
-        temp['test']['x']=voxel.position.x;
-        temp['test']['y']=voxel.position.y;
-        temp['test']['z']=voxel.position.z;
-        temp['test']['material']=curBlk;
-        console.log(JSON.stringify(temp));
-        //dosend()
+        var temp = {}
+        temp['test'] = {}
+        temp['test']['action'] = 0
+        temp['test']['x'] = voxel.position.x
+        temp['test']['y'] = voxel.position.y
+        temp['test']['z'] = voxel.position.z
+        temp['test']['material'] = curBlk
+        console.log(temp)
+        /* add blk
+         cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
+         var voxel = new THREE.Mesh(cubeGeo,cubeMaterial)
+         voxel.position.x=50
+         voxel.position.y=50
+         voxel.position.z=0
+         scene.add(voxel)
+         objects.push(voxel)
+         */
+        /* remove blk
+         for (var i=0;i<objects.length;i++) {
+         console.log(objects[i].position.x)
+         if ((objects[i].position.x==50) && (objects[i].position.y==50) && (objects[i].position.z==0)) {
+         scene.remove(objects[i])
+         objects.splice(i,1)
+         }
+         }
+         */
+        console.log(JSON.stringify(temp))
+        dosend(JSON.stringify(temp))
       }
       render()
     }
   }
   function onDocumentKeyDown(event) {
     switch (event.keyCode) {
-      case 16: isShiftDown = true; break
-      case 69:/*E*/ doBlkChange = true;
+      case 16:
+        isShiftDown = true;
+        break
+      case 69:/*E*/
+        doBlkChange = true;
         curBlk += 1;
-        if (curBlk>3) {
+        if (curBlk > 3) {
           curBlk = 0
         }
         console.log(curBlk);
         path = pathArr[curBlk];
         console.log(path);
-        rollOverMaterial.map= new THREE.TextureLoader().load(path);
+        rollOverMaterial.map = new THREE.TextureLoader().load(path);
         rollOverMaterial.map.needsUpdate = true;
         break
     }
   }
   function onDocumentKeyUp(event) {
     switch (event.keyCode) {
-      case 16: isShiftDown = false; break
-      case 69:/*E*/ doBlkChange = false; break
+      case 16:
+        isShiftDown = false;
+        break
+      case 69:/*E*/
+        doBlkChange = false;
+        break
     }
   }
   function onDocumentKeyPress(event) {
-      switch (event.keyCode) {
-        case 69:/*E*/ doBlkChange = true; console.log("E"); break
-      }
+    switch (event.keyCode) {
+      case 69:/*E*/
+        doBlkChange = true;
+        console.log("E");
+        break
+    }
   }
 
   function animate() {
@@ -821,24 +917,22 @@ websocket.onerror = function(evt) {
     var size = width * height
     var quality = 2
     var z = Math.random() * 100
-    for (var j = 0 ;j < 4; j++) {
+    for (var j = 0; j < 4; j++) {
       if (j === 0) {
-        for (var ii = 0; ii < size; ii++) data[ ii ] = 0
+        for (var ii = 0; ii < size; ii++) data[ii] = 0
       }
       for (var i = 0; i < size; i++) {
         var x = i % width
         var y = (i / width) | 0
-        data[ i ] += perlin.noise(x / quality, y / quality, z) * quality
+        data[i] += perlin.noise(x / quality, y / quality, z) * quality
       }
       quality *= 4
     }
     return data
   }
-  function getY (x, z) {
-    return (data[ x + z * worldWidth ] * 0.2) | 0
+  function getY(x, z) {
+    return (data[x + z * worldWidth] * 0.2) | 0
   }
-
-
 
 
 </script>

@@ -1,6 +1,6 @@
 <template>
   <!--
-    <div id="test">
+    <div id="Action">
       {{currentTexture}}
     </div>
   -->
@@ -10,17 +10,16 @@
   /*
    var Vue=require('vue')
    var vm=new Vue({
-   el:"#test",
+   el:"#Action",
    data: {
    currentTexture:'a'
    }
    })
    vm.currentTexture='b'
    */
-  /*
+/*
    var wsUri = 'ws://10.131.251.151:8081/websocket';
-   */
-  var wsUri = 'ws://10.131.251.151:8081/websocket';
+  //var wsUri = 'ws://localhost:8081/websocket';
   var websocket = new WebSocket(wsUri);
   var dosend = function () {
   };
@@ -43,25 +42,27 @@
   function onMessage(evt) {
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
-    console.log(obj.test.action)
-    if (obj.test.action == 0) {
-      //console.log('test')
-      cubeMaterial = new THREE.MeshLambertMaterial({
+    console.log(obj.Action.action)
+    if (obj.Action.action == 0) {
+      //console.log('Action')
+      cubeMaterial = new THREE.MeshBasicMaterial(/!*{color: 0xff0000, opacity: 0.5, transparent: true}*!/{
         color: 0xfeb74c,
-        map: new THREE.TextureLoader().load(pathArr[obj.test.material])
+        opacity: 0,
+        map: new THREE.TextureLoader().load(pathArr[obj.Action.material])
       })
+
       var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
-      voxel.position.x = obj.test.x;
-      voxel.position.y = obj.test.y;
-      voxel.position.z = obj.test.z;
+      voxel.position.x = obj.Action.x;
+      voxel.position.y = obj.Action.y;
+      voxel.position.z = obj.Action.z;
       scene.add(voxel)
       objects.push(voxel)
       console.log(objects)
 
-    } else if (obj.test.action == 1) {
+    } else if (obj.Action.action == 1) {
       for (var i = 0; i < objects.length; i++) {
         console.log(objects[i].position.x)
-        if ((objects[i].position.x == obj.test.x) && (objects[i].position.y == obj.test.y) && (objects[i].position.z == obj.test.z)) {
+        if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
           scene.remove(objects[i])
           objects.splice(i, 1)
         }
@@ -70,6 +71,7 @@
     render()
     //websocket.close();
   }
+*/
   /*dosend(1)*/
   var THREE = require('three')
   //$.getScript
@@ -152,469 +154,73 @@
    * @author paulirish / http://paulirish.com/
    */
 
-  THREE.FirstPersonControls = function (object, domElement) {
+  THREE.PointerLockControls = function ( camera,oooo ) {
 
-    this.object = object;
-    this.target = new THREE.Vector3(0, 0, 0);
+    var scope = this;
 
-    this.domElement = ( domElement !== undefined ) ? domElement : document;
+    camera.rotation.set( 0, 0, 0 );
+    oooo.rotation.set(0,0,0);
 
-    this.enabled = true;
+    var pitchObject = new THREE.Object3D();
+    pitchObject.add( camera );
+    //pitchObject.add( oooo );
 
-    this.movementSpeed = 1.0;
-    this.lookSpeed = 0.005;
+    var yawObject = new THREE.Object3D();
+    yawObject.position.y = 70;
+    yawObject.add( pitchObject );
 
-    this.lookVertical = true;
-    this.autoForward = false;
+    var PI_2 = Math.PI / 2;
 
-    this.activeLook = true;
+    var onMouseMove = function ( event ) {
 
-    this.heightSpeed = false;
-    this.heightCoef = 1.0;
-    this.heightMin = 0.0;
-    this.heightMax = 1.0;
+      if ( scope.enabled === false ) return;
 
-    this.constrainVertical = false;
-    this.verticalMin = 0;
-    this.verticalMax = Math.PI;
+      var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+      var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-    this.autoSpeedFactor = 0.0;
+      yawObject.rotation.y -= movementX * 0.002;
+      pitchObject.rotation.x -= movementY * 0.002;
+      oooo.rotation.y -= movementX * 0.002
 
-    this.mouseX = 0;
-    this.mouseY = 0;
-    this.doViewChange = false;
-
-    this.lat = 0;
-    this.lon = 0;
-    this.phi = 0;
-    this.theta = 0;
-
-    this.moveForward = false;
-    this.moveBackward = false;
-    this.moveLeft = false;
-    this.moveRight = false;
-    this.jumping = false;
-    this.falling = false;
-    this.rotateLeft = false;
-    this.rotateRight = false;
-    this.jumpingHight = 0;
-
-    this.mouseDragOn = false;
-
-    this.viewHalfX = 0;
-    this.viewHalfY = 0;
-
-    if (this.domElement !== document) {
-
-      this.domElement.setAttribute('tabindex', -1);
-
-    }
-
-    //
-
-    this.handleResize = function () {
-
-      if (this.domElement === document) {
-
-        this.viewHalfX = window.innerWidth / 2;
-        this.viewHalfY = window.innerHeight / 2;
-
-      } else {
-
-        this.viewHalfX = this.domElement.offsetWidth / 2;
-        this.viewHalfY = this.domElement.offsetHeight / 2;
-
-      }
+      pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+      //oooo.rotation.x = Math.max( - PI_2, Math.min( PI_2, oooo.rotation.x ) );
 
     };
 
-    /*
-     this.onMouseDown = function ( event ) {
+    this.dispose = function() {
 
-     if ( this.domElement !== document ) {
-
-     this.domElement.focus();
-
-     }
-
-     event.preventDefault();
-     event.stopPropagation();
-
-     if ( this.activeLook ) {
-
-     switch ( event.button ) {
-
-     case 0: this.moveForward = true; break;
-     case 2: this.moveBackward = true; break;
-
-     }
-
-     }
-
-     this.mouseDragOn = true;
-
-     };
-     */
-
-    /*
-     this.onMouseUp = function ( event ) {
-
-     event.preventDefault();
-     event.stopPropagation();
-
-     if ( this.activeLook ) {
-
-     switch ( event.button ) {
-
-     case 0: this.moveForward = false; break;
-     case 2: this.moveBackward = false; break;
-
-     }
-
-     }
-
-     this.mouseDragOn = false;
-
-     };
-     */
-
-    this.onMouseMove = function (event) {
-      if (this.domElement === document) {
-
-        this.mouseX = event.pageX - this.viewHalfX;
-        this.mouseY = event.pageY - this.viewHalfY;
-
-      } else {
-
-        this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
-        this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
-
-      }
-    };
-
-    this.onKeyDown = function (event) {
-
-      //event.preventDefault();
-
-      switch (event.keyCode) {
-
-        case 38: /*up*/
-        case 87: /*W*/
-          this.moveForward = true;
-          break;
-
-        case 37: /*left*/
-        case 65: /*A*/
-          this.moveLeft = true;
-          break;
-
-        case 40: /*down*/
-        case 83: /*S*/
-          this.moveBackward = true;
-          break;
-
-        case 39: /*right*/
-        case 68: /*D*/
-          this.moveRight = true;
-          break;
-
-        case 90: /*Z*/
-          this.doViewChange = true;
-          break;
-        /*
-         case  81:/!*Q*!/
-         this.rotateLeft=true;break;
-         case  69:/!*E*!/
-         this.rotateRight=true;
-         */
-
-        /*
-         case 82: /!*R*!/ this.moveUp = true; break;
-         case 70: /!*F*!/ this.moveDown = true; break;
-         */
-
-      }
+      document.removeEventListener( 'mousemove', onMouseMove, false );
 
     };
 
-    this.onKeyUp = function (event) {
+    document.addEventListener( 'mousemove', onMouseMove, false );
 
-      switch (event.keyCode) {
+    this.enabled = false;
 
-        case 38: /*up*/
-        case 87: /*W*/
-          this.moveForward = false;
-          break;
+    this.getObject = function () {
 
-        case 37: /*left*/
-        case 65: /*A*/
-          this.moveLeft = false;
-          break;
-
-        case 40: /*down*/
-        case 83: /*S*/
-          this.moveBackward = false;
-          break;
-
-        case 39: /*right*/
-        case 68: /*D*/
-          this.moveRight = false;
-          break;
-
-        case 90: /*Z*/
-          this.doViewChange = false;
-          break;
-
-
-      }
+      return yawObject;
 
     };
 
-    this.onKeyPress = function (event) {
-      switch (event.keyCode) {
-        case 32: /*space*/
-          this.jumping = true;
-          break;
-      }
-    }
+    this.getDirection = function() {
 
-    this.update = function (delta, oooo) {
+      // assumes the camera itself is not rotated
 
-      if (this.enabled === false) return;
+      var direction = new THREE.Vector3( 0, 0, - 1 );
+      var rotation = new THREE.Euler( 0, 0, 0, "YXZ" );
 
+      return function( v ) {
 
-      if (!this.doViewChange) {
-        this.mouseX = 0;
-        this.mouseY = 0;
-      }
+        rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
 
-      if (this.heightSpeed) {
+        v.copy( direction ).applyEuler( rotation );
 
-        var y = THREE.Math.clamp(this.object.position.y, this.heightMin, this.heightMax);
-        var heightDelta = y - this.heightMin;
-
-        this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
-
-      } else {
-
-        this.autoSpeedFactor = 0.0;
-
-      }
-
-      var actualLookSpeed = delta * this.lookSpeed;
-
-      if (!this.activeLook) {
-
-        actualLookSpeed = 0;
-
-      }
-
-      var verticalLookRatio = 1;
-
-      if (this.constrainVertical) {
-
-        verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
-
-      }
-
-      this.lon += this.mouseX * actualLookSpeed;
-      if (this.lookVertical) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
-
-      this.lat = Math.max(-85, Math.min(85, this.lat));
-      this.phi = THREE.Math.degToRad(90 - this.lat);
-
-      this.theta = THREE.Math.degToRad(this.lon);
-
-      if (this.constrainVertical) {
-
-        this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
-
-      }
-
-      var actualMoveSpeed = delta * this.movementSpeed;
-      var actualForwardMoveSpeed = actualMoveSpeed;
-      var actualBackwardMoveSpeed = actualMoveSpeed;
-      var actualLeftMoveSpeed = actualMoveSpeed;
-      var actualRightMoveSpeed = actualMoveSpeed;
-      var targetPosition = this.target,
-        position = this.object.position
-      targetPosition.x = position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
-      targetPosition.y = position.y + 100 * Math.cos(this.phi);
-      targetPosition.z = position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
-
-      var localVertex = this.object.position.clone()
-      var globalVertex = targetPosition.clone()
-      var directionVector = globalVertex.sub(localVertex).normalize();
-
-      var forwardCrash = collisionDetect(localVertex, directionVector, oooo, actualMoveSpeed + 25);
-      if (forwardCrash) {
-        actualForwardMoveSpeed = 0;
-      }
-
-
-      var directionVector1 = directionVector.clone()
-      directionVector1.x = -directionVector.x
-      directionVector1.z = -directionVector.z
-      var backwardCrash = collisionDetect(localVertex, directionVector1, oooo, actualMoveSpeed + 25);
-      if (backwardCrash) {
-        actualBackwardMoveSpeed = 0;
-      }
-
-      var directionVector2 = directionVector.clone()
-      directionVector2.x = directionVector.z
-      directionVector2.z = -directionVector.x
-      var leftCrash = collisionDetect(localVertex, directionVector2, oooo, actualMoveSpeed + 25);
-      if (leftCrash) {
-        actualLeftMoveSpeed = 0;
-      }
-
-      var directionVector3 = directionVector.clone()
-      directionVector3.x = -directionVector.z
-      directionVector3.z = directionVector.x
-      var rightCrash = collisionDetect(localVertex, directionVector3, oooo, actualMoveSpeed + 25);
-      if (rightCrash) {
-        actualRightMoveSpeed = 0;
-      }
-//      document.getElementById('test').innerHTML=actualMoveSpeed+ " ha "+directionVector.length();
-
-      this.object.lookAt(targetPosition);
-      var nowPositionY = this.object.position.y;
-
-      if (this.moveForward || ( this.autoForward && !this.moveBackward )) this.object.translateZ(-( actualForwardMoveSpeed + this.autoSpeedFactor ));
-      if (this.moveBackward) this.object.translateZ(actualBackwardMoveSpeed);
-
-      if (this.moveLeft) this.object.translateX(-actualLeftMoveSpeed);
-      if (this.moveRight) this.object.translateX(actualRightMoveSpeed);
-
-      this.object.position.y = nowPositionY;
-
-
-      if (this.jumping) {
-        //alert('jumping!: falling:'+ this.falling);
-        if (this.falling) {
-          this.jumping = false;
-        }
-        else {
-
-          var upVector = new THREE.Vector3(0, 1, 0)
-          var localV = localVertex.clone();
-          var upCrash = collisionDetect(localV, upVector, oooo, 4);
-          if (upCrash) {
-            this.jumping = false;
-            this.falling = true;
-            this.jumpingHight = 0;
-          } else {
-            this.object.position.y += 5;
-            this.jumpingHight += 5;
-            if (this.jumpingHight >= 60) {
-              this.jumping = false;
-              this.jumpingHight = 0;
-              this.falling = true;
-            }
-          }
-
-
-        }
-
-      }
-      if (!this.jumping) {
-        var downVector = new THREE.Vector3(0, -1, 0)
-        var localV = localVertex.clone();
-        var downCrash = collisionDetect(localV, downVector, oooo, 39)
-        if ((downCrash)) this.falling = false;
-        else if (this.object.position.y <= 75) {
-          this.object.position.y = 75;
-          this.falling = false;
-        }
-        else {
-          this.falling = true;
-          this.object.position.y -= 5;
-        }
-
-      }
-      person_mesh.position.x = this.object.position.x;
-      person_mesh.position.z = this.object.position.z;
-      person_mesh.position.y = this.object.position.y - 70;
-
-    };
-
-    function collisionDetect(localVertex, directionVector, oooo, checkdistance) {
-
-      var bodyHalfsize = 25;
-      var bodyHalfHeight = 35;
-      //detect 6 points
-      var normalizedDirectionVector = directionVector.clone().normalize();
-
-      var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfsize;
-      var leftDeltaZ = normalizedDirectionVector.x * bodyHalfsize;
-      var rightDeltaX = normalizedDirectionVector.z * bodyHalfsize;
-      var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfsize;
-
-      var deltaX = [0, 0, leftDeltaX, leftDeltaX, rightDeltaX, rightDeltaX]
-      var deltaY = [0, -bodyHalfHeight, 0, -bodyHalfHeight, 0, -bodyHalfHeight]
-      var deltaZ = [0, 0, leftDeltaZ, leftDeltaZ, rightDeltaZ, rightDeltaZ]
-
-      for (var i = 0; i < deltaX.length; i++) {
-        var vertex = localVertex.clone();
-        vertex.x = localVertex.x + deltaX[i];
-        vertex.y = localVertex.y + deltaY[i];
-        vertex.z = localVertex.z + deltaZ[i];
-        var ray = new THREE.Raycaster(vertex, normalizedDirectionVector)
-        var collisionResults = ray.intersectObjects(oooo)
-        if (collisionResults.length > 0 && collisionResults[0].distance <= directionVector.length() + checkdistance) {
-          return true;   // crash 是一个标记变量
-        }
-      }
-
-      return false;
-    }
-
-
-    function contextmenu(event) {
-
-      event.preventDefault();
-
-    }
-
-    this.dispose = function () {
-
-      this.domElement.removeEventListener('contextmenu', contextmenu, false);
-      //this.domElement.removeEventListener( 'mousedown', _onMouseDown, false );
-      this.domElement.removeEventListener('mousemove', _onMouseMove, false);
-      //this.domElement.removeEventListener( 'mouseup', _onMouseUp, false );
-
-      window.removeEventListener('keydown', _onKeyDown, false);
-      window.removeEventListener('keyup', _onKeyUp, false);
-      window.removeEventListener('keypress', _onKeyPress, false);
-
-    };
-
-    var _onMouseMove = bind(this, this.onMouseMove);
-    //var _onMouseDown = bind( this, this.onMouseDown );
-    //var _onMouseUp = bind( this, this.onMouseUp );
-    var _onKeyDown = bind(this, this.onKeyDown);
-    var _onKeyUp = bind(this, this.onKeyUp);
-    var _onKeyPress = bind(this, this.onKeyPress);
-
-    this.domElement.addEventListener('contextmenu', contextmenu, false);
-    this.domElement.addEventListener('mousemove', _onMouseMove, false);
-    //this.domElement.addEventListener( 'mousedown', _onMouseDown, false );
-    //this.domElement.addEventListener( 'mouseup', _onMouseUp, false );
-
-    window.addEventListener('keydown', _onKeyDown, false);
-    window.addEventListener('keyup', _onKeyUp, false);
-    window.addEventListener('keypress', _onKeyPress, false);
-    function bind(scope, fn) {
-
-      return function () {
-
-        fn.apply(scope, arguments);
+        return v;
 
       };
 
-    }
-
-    this.handleResize();
+    }();
 
   };
 
@@ -653,11 +259,23 @@
   var data = generateHeight(worldWidth, worldDepth)
   var clock = new THREE.Clock()
   var path
-  document.write('<div style=\'fix\' id=\'test\'></div>')
+  var controlsEnabled = false;
+
+  var moveForward = false;
+  var moveBackward = false;
+  var moveLeft = false;
+  var moveRight = false;
+  var canJump = false;
+
+  var prevTime = performance.now();
+  var velocity = new THREE.Vector3();
+
+
 
   init()
   animate()
   //render()
+
 
 
   function init() {
@@ -669,10 +287,12 @@
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
+/*
     controls = new THREE.FirstPersonControls(camera)
     controls.movementSpeed = 1000
     controls.lookSpeed = 0.125
     controls.lookVertical = true
+*/
 
 
     container = document.createElement('div')
@@ -709,9 +329,11 @@
     console.log(path)
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
+/*
     var blockInfo = require('minecraft-blockinfo')
     var minecraftBlockIdentifier = '_2'
     blockInfo.blocks[minecraftBlockIdentifier]
+*/
     /*
      cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
      */
@@ -733,10 +355,117 @@
     var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
     person_mesh = new THREE.Mesh(person, personMaterial)
     person_mesh.position.x = camera.position.x
-    person_mesh.position.y = camera.position.y - 70
+    person_mesh.position.y = camera.position.y - 10
     person_mesh.position.z = camera.position.z
 
     scene.add(person_mesh)
+    controls = new THREE.PointerLockControls( camera ,person_mesh);
+    var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+    if ( havePointerLock ) {
+
+      var element = document.body;
+
+      element.addEventListener('click',function(event) {
+
+        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+        element.requestPointerLock();
+      },false);
+      var pointerlockchange = function ( event ) {
+
+        if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+
+          controlsEnabled = true;
+          controls.enabled = true;
+
+
+        } else {
+
+          controls.enabled = false;
+
+        }
+
+      };
+
+      var pointerlockerror = function ( event ) {
+
+        //instructions.style.display = '';
+
+      };
+
+      // Hook pointer lock state change events
+      document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+      document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+      document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+
+      document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+      document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+      document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+   }
+    scene.add( controls.getObject() );
+
+    var onKeyDown = function ( event ) {
+
+      switch ( event.keyCode ) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = true;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = true; break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = true;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = true;
+          break;
+
+        case 32: // space
+          if ( canJump === true ) velocity.y += 350;
+          canJump = false;
+          break;
+
+      }
+
+    };
+
+    var onKeyUp = function ( event ) {
+
+      switch( event.keyCode ) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = false;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = false;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          break;
+
+      }
+
+    };
+
+    document.addEventListener( 'keydown', onKeyDown, false );
+    document.addEventListener( 'keyup', onKeyUp, false );
 
 
     raycaster = new THREE.Raycaster()
@@ -767,10 +496,11 @@
 
   }
   function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    controls.handleResize()
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    //controls.handleResize()
   }
   function onDocumentMouseMove(event) {
     event.preventDefault()
@@ -796,39 +526,40 @@
       if (isShiftDown) {
         if (intersect.object !== plane) {
           var temp = {}
-          temp['test'] = {}
-          temp['test']['action'] = 1
-          temp['test']['x'] = intersect.object.position.x
-          temp['test']['y'] = intersect.object.position.y
-          temp['test']['z'] = intersect.object.position.z
-          temp['test']['material'] = curBlk
+          temp['Action'] = {}
+          temp['Action']['action'] = 1
+          temp['Action']['x'] = intersect.object.position.x
+          temp['Action']['y'] = intersect.object.position.y
+          temp['Action']['z'] = intersect.object.position.z
+          temp['Action']['material'] = curBlk
           console.log(temp)
           console.log(JSON.stringify(temp))
           dosend(JSON.stringify(temp))
-          scene.remove(intersect.object)
+          //scene.remove(intersect.object)
           console.log(intersect.object)
-          objects.splice(objects.indexOf(intersect.object), 1)
+          //objects.splice(objects.indexOf(intersect.object), 1)
         }
         // create cube
       } else {
         console.log(curBlk)
-        cubeMaterial = new THREE.MeshLambertMaterial({
+        cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
           color: 0xfeb74c,
+          opacity: 0,
           map: new THREE.TextureLoader().load(pathArr[curBlk])
         })
 
         var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
         voxel.position.copy(intersect.point).add(intersect.face.normal)
         voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
-        scene.add(voxel)
-        objects.push(voxel)
+        //scene.add(voxel)
+        //objects.push(voxel)
         var temp = {}
-        temp['test'] = {}
-        temp['test']['action'] = 0
-        temp['test']['x'] = voxel.position.x
-        temp['test']['y'] = voxel.position.y
-        temp['test']['z'] = voxel.position.z
-        temp['test']['material'] = curBlk
+        temp['Action'] = {}
+        temp['Action']['action'] = 0
+        temp['Action']['x'] = voxel.position.x
+        temp['Action']['y'] = voxel.position.y
+        temp['Action']['z'] = voxel.position.z
+        temp['Action']['material'] = curBlk
         console.log(temp)
         /* add blk
          cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
@@ -894,12 +625,64 @@
 
   function animate() {
     requestAnimationFrame(animate)
+    if (controlsEnabled ) {
+      raycaster.ray.origin.copy( controls.getObject().position );
+      raycaster.ray.origin.y -= 70;
+
+      var intersections = raycaster.intersectObjects( objects );
+
+      var isOnObject = intersections.length > 0;
+
+      var time = performance.now();
+      //console.log(time);
+      var delta = ( time - prevTime ) / 1000;
+
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+
+      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+      if ( moveForward ) velocity.z -= 400.0 * delta;
+      if ( moveBackward ) velocity.z += 400.0 * delta;
+
+      if ( moveLeft ) velocity.x -= 400.0 * delta;
+      if ( moveRight ) velocity.x += 400.0 * delta;
+
+      if ( isOnObject === true ) {
+        velocity.y = Math.max( 0, velocity.y );
+
+        canJump = true
+      };
+
+
+      controls.getObject().translateX( velocity.x * delta );
+      controls.getObject().translateY( velocity.y * delta );
+      controls.getObject().translateZ( velocity.z * delta );
+      if ( controls.getObject().position.y < 70 )
+      {
+        velocity.y = 0;
+        controls.getObject().position.y = 70;
+
+        canJump = true;
+
+      }
+
+      prevTime = time;
+
+    }
+    person_mesh.position.x=controls.getObject().position.x;
+    person_mesh.position.y=controls.getObject().position.y-70;
+    person_mesh.position.z=controls.getObject().position.z;
+/*    console.log(controls.getObject())
+    console.log(person_mesh.position.y)
+    console.log(velocity.y);*/
+
     render()
-    //document.getElementById('test').innerHTML=camera.position.z;
+    //document.getElementById('Action').innerHTML=camera.position.z;
     //stats.update()
   }
   function render() {
-    controls.update(clock.getDelta(), objects, person_mesh)
+    //controls.update(clock.getDelta(), objects, person_mesh)
     renderer.render(scene, camera)
   }
 
@@ -936,3 +719,55 @@
 
 
 </script>
+<style>
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background-color: #ffffff;
+    margin: 0;
+    overflow: hidden;
+    font-family: arial;
+  }
+  #blocker {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0,0,0,0.5);
+
+  }
+
+  #instructions {
+
+    width: 100%;
+    height: 100%;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    box-orient: horizontal;
+
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+
+    color: #ffffff;
+    text-align: center;
+
+    cursor: pointer;
+
+  }
+
+</style>

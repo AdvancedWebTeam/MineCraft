@@ -428,7 +428,7 @@
           break;
 
         case 32: // space
-          if ( canJump === true ) velocity.y += 350;
+          if ( canJump === true ) velocity.y += 400;
           canJump = false;
           break;
 
@@ -551,8 +551,8 @@
         var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
         voxel.position.copy(intersect.point).add(intersect.face.normal)
         voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25)
-        //scene.add(voxel)
-        //objects.push(voxel)
+        scene.add(voxel)
+        objects.push(voxel)
         var temp = {}
         temp['Action'] = {}
         temp['Action']['action'] = 0
@@ -628,9 +628,15 @@
     if (controlsEnabled ) {
       raycaster.ray.origin.copy( controls.getObject().position );
       //raycaster.ray.origin.y -= 75;
+      raycaster.ray.direction.y=0;
+      if ((raycaster.ray.direction.x==0) && (raycaster.ray.direction.y==0)) {
+          raycaster.ray.direction.x=1
+      }
       console.log(raycaster.ray.origin.y)
+      console.log(raycaster.ray)
 
       var intersections = raycaster.intersectObjects( objects );
+      console.log(intersections)
 
       var isOnObject = intersections.length > 0;
 
@@ -643,11 +649,11 @@
 
       velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-      if ( moveForward ) velocity.z -= 400.0 * delta;
-      if ( moveBackward ) velocity.z += 400.0 * delta;
+      if ( moveForward ) velocity.z -= 4000.0 * delta;
+      if ( moveBackward ) velocity.z += 4000.0 * delta;
 
-      if ( moveLeft ) velocity.x -= 400.0 * delta;
-      if ( moveRight ) velocity.x += 400.0 * delta;
+      if ( moveLeft ) velocity.x -= 4000.0 * delta;
+      if ( moveRight ) velocity.x += 4000.0 * delta;
 
       if ( isOnObject === true ) {
         velocity.y = Math.max( 0, velocity.y );

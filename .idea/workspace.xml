@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6373bb69-41ad-43cd-b5e4-cde6e16ca568" name="Default" comment="add materials">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.vue" afterPath="$PROJECT_DIR$/src/App.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Hello.vue" afterPath="$PROJECT_DIR$/src/components/Hello.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Plain.vue" afterPath="$PROJECT_DIR$/src/components/Plain.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -22,8 +20,8 @@
       <file leaf-file-name="Plain.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="554" column="10" lean-forward="false" selection-start-line="554" selection-start-column="10" selection-end-line="554" selection-end-column="10" />
+            <state relative-caret-position="331">
+              <caret line="430" column="50" lean-forward="false" selection-start-line="430" selection-start-column="50" selection-end-line="430" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -401,7 +399,7 @@
       <workItem from="1496219120455" duration="13961000" />
       <workItem from="1496237575476" duration="3113000" />
       <workItem from="1496278408693" duration="7368000" />
-      <workItem from="1496462804657" duration="3220000" />
+      <workItem from="1496462804657" duration="4557000" />
     </task>
     <task id="LOCAL-00001" summary="basic structure">
       <created>1493807174028</created>
@@ -428,7 +426,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="137390000" />
+    <option name="totallyTimeSpent" value="138727000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -802,8 +800,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="554" column="10" lean-forward="false" selection-start-line="554" selection-start-column="10" selection-end-line="554" selection-end-column="10" />
+        <state relative-caret-position="331">
+          <caret line="430" column="50" lean-forward="false" selection-start-line="430" selection-start-column="50" selection-end-line="430" selection-end-column="50" />
           <folding />
         </state>
       </provider>

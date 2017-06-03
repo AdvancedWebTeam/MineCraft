@@ -1,9 +1,9 @@
 <template>
-  <div class="list">
+<!--  <div class="list">
     <div v-for="button in buttons">
       <router-link v-bind:to="button.to" v-bind:class="{'active':button.isClick }" class="list-group-item" v-on:mouseover="Show(button)" v-on:mouseleave="Hide(button)">{{button.name}}</router-link>
     </div>
-  </div>
+  </div>-->
 </template>
 <script>
   export default {

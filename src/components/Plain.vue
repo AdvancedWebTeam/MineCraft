@@ -166,7 +166,7 @@
     //pitchObject.add( oooo );
 
     var yawObject = new THREE.Object3D();
-    yawObject.position.y = 70;
+    yawObject.position.y = 0;
     yawObject.add( pitchObject );
 
     var PI_2 = Math.PI / 2;
@@ -627,7 +627,8 @@
     requestAnimationFrame(animate)
     if (controlsEnabled ) {
       raycaster.ray.origin.copy( controls.getObject().position );
-      raycaster.ray.origin.y -= 70;
+      //raycaster.ray.origin.y -= 75;
+      console.log(raycaster.ray.origin.y)
 
       var intersections = raycaster.intersectObjects( objects );
 
@@ -658,10 +659,10 @@
       controls.getObject().translateX( velocity.x * delta );
       controls.getObject().translateY( velocity.y * delta );
       controls.getObject().translateZ( velocity.z * delta );
-      if ( controls.getObject().position.y < 70 )
+      if ( controls.getObject().position.y < 0/*75*/ )
       {
         velocity.y = 0;
-        controls.getObject().position.y = 70;
+        controls.getObject().position.y = 0/*75*/;
 
         canJump = true;
 
@@ -671,7 +672,7 @@
 
     }
     person_mesh.position.x=controls.getObject().position.x;
-    person_mesh.position.y=controls.getObject().position.y-70;
+    person_mesh.position.y=controls.getObject().position.y-75;
     person_mesh.position.z=controls.getObject().position.z;
 /*    console.log(controls.getObject())
     console.log(person_mesh.position.y)

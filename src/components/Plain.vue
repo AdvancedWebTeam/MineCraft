@@ -42,28 +42,67 @@
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
 //    console.log(obj.Action.action)
-    if (obj.Action.action == 0) {
-      //console.log('Action')
-      cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
-        color: 0xfeb74c,
-        opacity: 0,
-        map: new THREE.TextureLoader().load(pathArr[obj.Action.material])
-      })
+    if (obj.ID!==undefined) {
+      if (person_list[obj.ID.id] ==undefined) {
+        personal_id=obj.ID.id
+      }
+    } else
+    if (obj.Person!==undefined) {
+      if (person_list[obj.Person.id]==undefined) {
+        var temp_person = new THREE.BoxGeometry(40, 80, 40)
+        var temp_personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
+        var temp_person_mesh = new THREE.Mesh(temp_person, temp_personMaterial)
+        temp_person_mesh.position.x = obj.Person.x
+        temp_person_mesh.position.y = obj.Person.y
+        temp_person_mesh.position.z = obj.Person.z
+        temp_person_mesh.rotation.y-=movement
+        person_list[obj.Person.id]=temp_person_mesh
 
-      var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
-      voxel.position.x = obj.Action.x;
-      voxel.position.y = obj.Action.y;
-      voxel.position.z = obj.Action.z;
-      scene.add(voxel)
-      objects.push(voxel)
+        scene.add(temp_person_mesh)
+
+      } else {
+        if (obj.Person.id==personal_id) {
+          person_mesh.position.x=obj.Person.x
+          person_mesh.position.y=obj.Person.y
+          person_mesh.position.z=obj.Person.z
+          person_mesh.rotation.y-=movement
+          camera.position.x=obj.Person.x
+          camera.position.y=obj.Person.y+40
+          camera.position.z=obj.Person.z
+          camera.rotation.y-=movement
+
+        } else {
+          person_list[obj.Person.id].position.x=obj.Person.x
+          person_list[obj.Person.id].position.y=obj.Person.y
+          person_list[obj.Person.id].position.z=obj.Person.z
+          person_list[obj.Person.id].rotation.y-=movement
+        }
+
+      }
+    } else {
+      if (obj.Action.action == 0) {
+        //console.log('Action')
+        cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
+          color: 0xfeb74c,
+          opacity: 0,
+          map: new THREE.TextureLoader().load(pathArr[obj.Action.material])
+        })
+
+        var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
+        voxel.position.x = obj.Action.x;
+        voxel.position.y = obj.Action.y;
+        voxel.position.z = obj.Action.z;
+        scene.add(voxel)
+        objects.push(voxel)
 //      console.log(objects)
 
-    } else if (obj.Action.action == 1) {
-      for (var i = 0; i < objects.length; i++) {
+      } else if (obj.Action.action == 1) {
+        for (var i = 0; i < objects.length; i++) {
 //        console.log(objects[i].position.x)
-        if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
-          scene.remove(objects[i])
-          objects.splice(i, 1)
+          if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
+            scene.remove(objects[i])
+            objects.splice(i, 1)
+          }
         }
       }
     }
@@ -179,6 +218,8 @@
   var rollOverMesh, rollOverMaterial
   var cubeGeo, cubeMaterial
   var objects = []
+  var person_list=[]
+  var personal_id
 
   var container, stats
   var camera, controls, scene, renderer
@@ -354,6 +395,7 @@
     plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
+    console.log(plane)
     // Lights
     var ambientLight = new THREE.AmbientLight(0x606060)
     scene.add(ambientLight)
@@ -657,6 +699,15 @@
     person_mesh.position.x = controlObject.position.x;
     person_mesh.position.z = controlObject.position.z;
     person_mesh.position.y = controlObject.position.y-40;
+
+    var temp = {}
+    temp['Person'] = {}
+    temp['Person']['id'] = personal_id
+    temp['Person']['x'] = person_mesh.position.x
+    temp['Person']['y'] = person_mesh.position.y
+    temp['Person']['z'] = person_mesh.position.z
+    temp['Person']['movement'] = curBlk
+    dosend(JSON.stringify(temp))
 
   }
 

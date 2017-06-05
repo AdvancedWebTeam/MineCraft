@@ -41,11 +41,12 @@
   function onMessage(evt) {
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
-    //console.log(obj)
+    console.log(obj)
 //    console.log(obj.Action.action)
     if (obj.ID!==undefined) {
       if (person_list[obj.ID.id] ==undefined) {
-        personal_id=obj.ID.id
+        //personal_id=obj.ID.id
+        personal_id = Math.random()
       }
     } else
     if (obj.Person!==undefined) {
@@ -56,33 +57,35 @@
         temp_person_mesh.position.x = obj.Person.x
         temp_person_mesh.position.y = obj.Person.y
         temp_person_mesh.position.z = obj.Person.z
-        temp_person_mesh.rotation.y-=movement
+        temp_person_mesh.rotation.y=obj.Person.movement
         person_list[obj.Person.id]=temp_person_mesh
 
         scene.add(temp_person_mesh)
+        console.log(obj.Person.id)
+        console.log(person_list)
 
       } else {
         if (obj.Person.id==personal_id) {
-          person_mesh.position.x=obj.Person.x
+/*          person_mesh.position.x=obj.Person.x
           person_mesh.position.y=obj.Person.y
           person_mesh.position.z=obj.Person.z
-          person_mesh.rotation.y-=movement
+          person_mesh.rotation.y-=obj.Person.movement
           camera.position.x=obj.Person.x
           camera.position.y=obj.Person.y+40
           camera.position.z=obj.Person.z
-          camera.rotation.y-=movement
+          camera.rotation.y-=obj.Person.movement*/
 
         } else {
           person_list[obj.Person.id].position.x=obj.Person.x
           person_list[obj.Person.id].position.y=obj.Person.y
           person_list[obj.Person.id].position.z=obj.Person.z
-          person_list[obj.Person.id].rotation.y-=movement
+          person_list[obj.Person.id].rotation.y=obj.Person.movement
         }
 
       }
     } else {
       if (obj.Action.action == 0) {
-        console.log('Action')
+        //console.log('Action')
         cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
           color: 0xfeb74c,
           opacity: 0,
@@ -112,7 +115,7 @@
   }
   /*dosend(1)*/
   var THREE = require('three')
-  var movement
+  var movement=0
   //$.getScript
   //include ('three/examples/js/controls/FirstPersonControls.js');
   //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
@@ -153,7 +156,7 @@
       oooo.rotation.y -= movementX * 0.002
 
       pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
-      movement = movementX*0.002;
+      //movement = movementX*0.002;
       //oooo.rotation.x = Math.max( - PI_2, Math.min( PI_2, oooo.rotation.x ) );
 
     };
@@ -222,7 +225,7 @@
   var cubeGeo, cubeMaterial
   var objects = []
   var person_list=[]
-  var personal_id
+  var personal_id=0
 
   var container, stats
   var camera, controls, scene, renderer
@@ -230,6 +233,7 @@
   var clock = new THREE.Clock()
   var path
   var controlsEnabled = false;
+  var count =0
 
 
 
@@ -266,6 +270,7 @@
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
+    personal_id=Math.random();
 /*
     controls = new THREE.FirstPersonControls(camera)
     controls.movementSpeed = 1000
@@ -342,7 +347,7 @@
 
     controls = new THREE.PointerLockControls( camera ,person_mesh);
 
-    console.log(controls.getObject().position.y);
+    //console.log(controls.getObject().position.y);
 
 
     var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -398,7 +403,7 @@
     plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
-    console.log(plane)
+    //console.log(plane)
     // Lights
     var ambientLight = new THREE.AmbientLight(0x606060)
     scene.add(ambientLight)
@@ -484,7 +489,7 @@
         temp['Action']['y'] = voxel.position.y
         temp['Action']['z'] = voxel.position.z
         temp['Action']['material'] = curBlk
-        console.log(temp)
+        //console.log(temp)
         /* add blk
          cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
          var voxel = new THREE.Mesh(cubeGeo,cubeMaterial)
@@ -613,6 +618,10 @@
     var controlObject = controls.getObject();
     var delta = clock.getDelta();
 
+    count+=1
+    if (count==20) count=0
+
+
 //--------------------------------------------------------------------------------------------------
 
     var actualMoveSpeed = delta * movementSpeed;
@@ -703,14 +712,17 @@
     person_mesh.position.z = controlObject.position.z;
     person_mesh.position.y = controlObject.position.y-40;
 
+    //personal_id=1
     var temp = {}
     temp['Person'] = {}
     temp['Person']['id'] = personal_id
     temp['Person']['x'] = person_mesh.position.x
     temp['Person']['y'] = person_mesh.position.y
     temp['Person']['z'] = person_mesh.position.z
-    temp['Person']['movement'] = movement
-    //console.log(temp)
+    temp['Person']['movement'] = person_mesh.rotation.y
+    //console.log(camera)
+    console.log(temp)
+    if (count==0)
     dosend(JSON.stringify(temp))
 
   }

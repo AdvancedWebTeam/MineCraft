@@ -17,10 +17,10 @@
    })
    vm.currentTexture='b'
    */
-   var wsUri = 'ws://10.131.251.151:8081/websocket';
-  //var wsUri = 'ws://localhost:8081/websocket';
+   //var wsUri = 'ws://10.131.251.151:8081/websocket';
+  var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
   var websocket = new WebSocket(wsUri);
-  var dosend = function () {9
+  var dosend = function () {
   };
   websocket.onopen = function (evt) {
     dosend = function (data) {
@@ -41,6 +41,7 @@
   function onMessage(evt) {
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
+    //console.log(obj)
 //    console.log(obj.Action.action)
     if (obj.ID!==undefined) {
       if (person_list[obj.ID.id] ==undefined) {
@@ -81,7 +82,7 @@
       }
     } else {
       if (obj.Action.action == 0) {
-        //console.log('Action')
+        console.log('Action')
         cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
           color: 0xfeb74c,
           opacity: 0,
@@ -111,6 +112,7 @@
   }
   /*dosend(1)*/
   var THREE = require('three')
+  var movement
   //$.getScript
   //include ('three/examples/js/controls/FirstPersonControls.js');
   //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
@@ -151,6 +153,7 @@
       oooo.rotation.y -= movementX * 0.002
 
       pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+      movement = movementX*0.002;
       //oooo.rotation.x = Math.max( - PI_2, Math.min( PI_2, oooo.rotation.x ) );
 
     };
@@ -481,7 +484,7 @@
         temp['Action']['y'] = voxel.position.y
         temp['Action']['z'] = voxel.position.z
         temp['Action']['material'] = curBlk
-//        console.log(temp)
+        console.log(temp)
         /* add blk
          cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
          var voxel = new THREE.Mesh(cubeGeo,cubeMaterial)
@@ -706,7 +709,8 @@
     temp['Person']['x'] = person_mesh.position.x
     temp['Person']['y'] = person_mesh.position.y
     temp['Person']['z'] = person_mesh.position.z
-    temp['Person']['movement'] = curBlk
+    temp['Person']['movement'] = movement
+    //console.log(temp)
     dosend(JSON.stringify(temp))
 
   }

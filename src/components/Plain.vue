@@ -50,19 +50,19 @@
       }
     } else*/
     if (obj.Person!==undefined) {
-      if (person_list[obj.Person.id]==undefined) {
+      if ((person_list[obj.Person.id]==undefined) && (obj.Person.id!==personal_id)) {
         var temp_person = new THREE.BoxGeometry(40, 80, 40)
         var temp_personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
         var temp_person_mesh = new THREE.Mesh(temp_person, temp_personMaterial)
         temp_person_mesh.position.x = obj.Person.x
         temp_person_mesh.position.y = obj.Person.y
         temp_person_mesh.position.z = obj.Person.z
-        temp_person_mesh.rotation.y=obj.Person.movement
+        temp_person_mesh.rotation.y=obj.Person.rotation
         person_list[obj.Person.id]=temp_person_mesh
 
         scene.add(temp_person_mesh)
-        console.log(obj.Person.id)
-        console.log(person_list)
+        //console.log(obj.Person.id)
+        //console.log(person_list)
 
       } else {
         if (obj.Person.id==personal_id) {
@@ -79,35 +79,45 @@
           person_list[obj.Person.id].position.x=obj.Person.x
           person_list[obj.Person.id].position.y=obj.Person.y
           person_list[obj.Person.id].position.z=obj.Person.z
-          person_list[obj.Person.id].rotation.y=obj.Person.movement
+          person_list[obj.Person.id].rotation.y=obj.Person.rotation
         }
 
       }
     } else {
-      if (obj.Action.action == 0) {
-        //console.log('Action')
-        cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
-          color: 0xfeb74c,
-          opacity: 0,
-          map: new THREE.TextureLoader().load(pathArr[obj.Action.material])
-        })
+      if (obj.Action!==undefined) {
+        if (obj.Action.action == 0) {
+          //console.log('Action')
+          cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
+            color: 0xfeb74c,
+            opacity: 0,
+            map: new THREE.TextureLoader().load(pathArr[obj.Action.material])
+          })
 
-        var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
-        voxel.position.x = obj.Action.x;
-        voxel.position.y = obj.Action.y;
-        voxel.position.z = obj.Action.z;
-        scene.add(voxel)
-        objects.push(voxel)
+          var voxel = new THREE.Mesh(cubeGeo, cubeMaterial)
+          voxel.position.x = obj.Action.x;
+          voxel.position.y = obj.Action.y;
+          voxel.position.z = obj.Action.z;
+          scene.add(voxel)
+          objects.push(voxel)
 //      console.log(objects)
 
-      } else if (obj.Action.action == 1) {
-        for (var i = 0; i < objects.length; i++) {
+        } else if (obj.Action.action == 1) {
+          for (var i = 0; i < objects.length; i++) {
 //        console.log(objects[i].position.x)
-          if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
-            scene.remove(objects[i])
-            objects.splice(i, 1)
+            if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
+              scene.remove(objects[i])
+              objects.splice(i, 1)
+            }
           }
         }
+      } else {
+          if (obj.PersonLeave!==undefined) {
+            if (person_list[obj.Person.id]!==undefined) {
+                scene.remove(person_list[obj.Person.id])
+                person_list[obj.Person.id]=undefined
+                console.log(person_list)
+            }
+          }
       }
     }
     render()
@@ -733,7 +743,7 @@
     temp['Person']['x'] = person_mesh.position.x
     temp['Person']['y'] = person_mesh.position.y
     temp['Person']['z'] = person_mesh.position.z
-    temp['Person']['movement'] = person_mesh.rotation.y
+    temp['Person']['rotation'] = person_mesh.rotation.y
     //console.log(camera)
     console.log(temp)
     if (count==0)

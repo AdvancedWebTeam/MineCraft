@@ -17,8 +17,8 @@
    })
    vm.currentTexture='b'
    */
-   //var wsUri = 'ws://10.131.251.151:8081/websocket';
-  var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
+  var wsUri = 'ws://10.131.251.151:8081/websocket';
+  //var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
   var websocket = new WebSocket(wsUri);
   var dosend = function () {
   };
@@ -33,7 +33,8 @@
     websocket = new WebSocket(wsUri);
   };
   websocket.onerror = function (evt) {
-    websocket = new WebSocket(wsUri);
+    websocket.close();
+    //websocket = new WebSocket(wsUri);
   }
   websocket.onmessage = function (evt) {
     onMessage(evt)
@@ -41,7 +42,7 @@
   function onMessage(evt) {
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
-    console.log(obj)
+   // console.log(obj)
 //    console.log(obj.Action.action)
 /*    if (obj.ID!==undefined) {
       if (person_list[obj.ID.id] ==undefined) {
@@ -112,9 +113,10 @@
         }
       } else {
           if (obj.PersonLeave!==undefined) {
-            if (person_list[obj.Person.id]!==undefined) {
-                scene.remove(person_list[obj.Person.id])
-                person_list[obj.Person.id]=undefined
+            if (person_list[obj.PersonLeave.id]!==undefined) {
+                console.log(obj.PersonLeave);
+                scene.remove(person_list[obj.PersonLeave.id])
+                person_list[obj.PersonLeave.id]=undefined
                 console.log(person_list)
             }
           }
@@ -261,7 +263,7 @@
   var jumpingHight = 0;
 
 
-  var movementSpeed = 1000;
+  var movementSpeed = 100;
   var target = new THREE.Vector3(0,0,0);
 
 
@@ -308,7 +310,7 @@
       map: new THREE.TextureLoader().load(pathArr[0])
     })
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
-    scene.add(rollOverMesh)
+    //scene.add(rollOverMesh)
     /*
      if (doBlkChange) {
      curBlk += 1
@@ -627,13 +629,15 @@
   function animate() {
 
     requestAnimationFrame(animate)
-    if (controlsEnabled) moveUpdate();
+    //if (controlsEnabled) moveUpdate();
+    moveUpdate();
     render()
 
   }
   function render() {
     renderer.render(scene, camera)
   }
+
 
 
 
@@ -651,42 +655,46 @@
     var actualMoveSpeed = delta * movementSpeed;
 
 
-    var controlObject1 = controlObject.clone();
-    if (moveForward)  controlObject1.translateZ(-actualMoveSpeed);
 
-    if (moveBackward) controlObject1.translateZ(actualMoveSpeed);
 
-    if (moveLeft) controlObject1.translateX(-actualMoveSpeed);
-    if (moveRight) controlObject1.translateX(actualMoveSpeed);
-    controlObject1.position.y = controlObject.position.y;
-
-    var targetPosition = controlObject1.position.clone();
+    var target;
+    //console.log(person_list);
+    for (var i in person_list) {
+        //console.log(person_list[i]);
+      if (person_list[i]!==undefined) {
+          target = person_list[i];
+          break;
+      }
+    }
 
     var localVertex = controlObject.position.clone()
+    if (target!==undefined) {
+      var controlObject1 = controlObject.clone();
 
-    var directionVector = targetPosition.sub(localVertex).normalize();
+      controlObject1.lookAt(target.position);
+      controlObject1.translateZ(actualMoveSpeed);
+      controlObject1.position.y = controlObject.position.y;
 
-
-
-
-
-
-
-    var crash = collisionDetect(localVertex, directionVector, objects, 20);
-    if (crash) actualMoveSpeed = 0;
+      var targetPosition = controlObject1.position.clone();
 
 
-    var nowPositionY = controlObject.position.y;
+
+      var directionVector = targetPosition.sub(localVertex).normalize();
+
+      var crash = collisionDetect(localVertex, directionVector, objects, 20+actualMoveSpeed);
 
 
-    if (moveForward)  controlObject.translateZ(-(actualMoveSpeed));
+      if (!crash) {
+        controlObject.position.x = controlObject1.position.x;
+        controlObject.position.y = controlObject1.position.y;
+        controlObject.position.z = controlObject1.position.z;
+        controlObject.rotation.y = controlObject1.rotation.y;
+        //controlObject.lookAt(target.position);
+      }
+      else jumping = true;
+    }
 
-    if (moveBackward) controlObject.translateZ(actualMoveSpeed);
 
-    if (moveLeft) controlObject.translateX(-actualMoveSpeed);
-    if (moveRight) controlObject.translateX(actualMoveSpeed);
-
-    controlObject.position.y = nowPositionY;
 
 
     if (jumping) {
@@ -745,7 +753,7 @@
     temp['Person']['z'] = person_mesh.position.z
     temp['Person']['rotation'] = person_mesh.rotation.y
     //console.log(camera)
-    console.log(temp)
+    //console.log(temp)
     if (count==0)
     dosend(JSON.stringify(temp))
 

@@ -18,6 +18,8 @@
    vm.currentTexture='b'
    */
    //var wsUri = 'ws://10.131.251.151:8081/websocket';
+  var PersonMesh=require('@/assets/js/PersonModel')
+
   var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
   var websocket = new WebSocket(wsUri);
   var dosend = function () {
@@ -41,7 +43,7 @@
   function onMessage(evt) {
     //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
     var obj = JSON.parse(evt.data);
-    console.log(obj)
+    //console.log(obj)
 //    console.log(obj.Action.action)
 /*    if (obj.ID!==undefined) {
       if (person_list[obj.ID.id] ==undefined) {
@@ -51,16 +53,18 @@
     } else*/
     if (obj.Person!==undefined) {
       if ((person_list[obj.Person.id]==undefined) && (obj.Person.id!==personal_id)) {
-        var temp_person = new THREE.BoxGeometry(40, 80, 40)
-        var temp_personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
-        var temp_person_mesh = new THREE.Mesh(temp_person, temp_personMaterial)
+        var temp_person_mesh = new PersonMesh(scene)
+/*
         temp_person_mesh.position.x = obj.Person.x
         temp_person_mesh.position.y = obj.Person.y
         temp_person_mesh.position.z = obj.Person.z
         temp_person_mesh.rotation.y=obj.Person.rotation
+*/
+        temp_person_mesh.changePosition(obj.Person.x,obj.Person.y,obj.Person.z)
+        temp_person_mesh.rotate(0,obj.Person.rotation)
         person_list[obj.Person.id]=temp_person_mesh
 
-        scene.add(temp_person_mesh)
+        //scene.add(temp_person_mesh)
         //console.log(obj.Person.id)
         //console.log(person_list)
 
@@ -76,10 +80,8 @@
           camera.rotation.y-=obj.Person.movement*/
 
         } else {
-          person_list[obj.Person.id].position.x=obj.Person.x
-          person_list[obj.Person.id].position.y=obj.Person.y
-          person_list[obj.Person.id].position.z=obj.Person.z
-          person_list[obj.Person.id].rotation.y=obj.Person.rotation
+          person_list[obj.Person.id].changePosition(obj.Person.x-person_list[obj.Person.id].bodyMesh.position.x,obj.Person.y-person_list[obj.Person.id].bodyMesh.position.y,obj.Person.z-person_list[obj.Person.id].bodyMesh.position.z)
+          person_list[obj.Person.id].rotate(person_list[obj.Person.id].bodyMesh.rotation.y,obj.Person.rotation)
         }
 
       }
@@ -112,10 +114,10 @@
         }
       } else {
           if (obj.PersonLeave!==undefined) {
-            if (person_list[obj.Person.id]!==undefined) {
-                scene.remove(person_list[obj.Person.id])
-                person_list[obj.Person.id]=undefined
-                console.log(person_list)
+            if (person_list[obj.PersonLeave.id]!==undefined) {
+                scene.remove(person_list[obj.PersonLeave.id])
+                person_list[obj.PersonLeave.id]=undefined
+                //console.log(person_list)
             }
           }
       }
@@ -137,12 +139,12 @@
    * @author paulirish / http://paulirish.com/
    */
 
-  THREE.PointerLockControls = function ( camera,oooo ) {
+  THREE.PointerLockControls = function ( camera ) {
 
     var scope = this;
 
     camera.rotation.set( 0, 0, 0 );
-    oooo.rotation.set(0,0,0);
+    //oooo.rotation.set(0,0,0);
 
     var pitchObject = new THREE.Object3D();
     pitchObject.add( camera );
@@ -163,7 +165,7 @@
 
       yawObject.rotation.y -= movementX * 0.002;
       pitchObject.rotation.x -= movementY * 0.002;
-      oooo.rotation.y -= movementX * 0.002
+      //oooo.rotation.y -= movementX * 0.002
 
       pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
       //movement = movementX*0.002;
@@ -276,7 +278,10 @@
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
 
-    //camera.position.y = 75;
+    //camera.position.y = -10;
+    console.log(camera)
+    camera.position.z=-11.25
+    //camera.rotation.y=-Math.PI
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
@@ -346,7 +351,7 @@
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
 
-    var person = new THREE.BoxGeometry(40, 80, 40)
+/*    var person = new THREE.BoxGeometry(40, 80, 40)
     var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
     person_mesh = new THREE.Mesh(person, personMaterial)
     person_mesh.position.x = camera.position.x
@@ -354,9 +359,11 @@
     person_mesh.position.z = camera.position.z
 
 
-    scene.add(person_mesh)
+    scene.add(person_mesh)*/
+    person_mesh=new PersonMesh(scene)
+    console.log(person_mesh)
 
-    controls = new THREE.PointerLockControls( camera ,person_mesh);
+    controls = new THREE.PointerLockControls(camera);
 
     //console.log(controls.getObject().position.y);
 
@@ -732,20 +739,27 @@
       }
 
     }
-    person_mesh.position.x = controlObject.position.x;
-    person_mesh.position.z = controlObject.position.z;
-    person_mesh.position.y = controlObject.position.y-40;
+    person_mesh.changePosition(controlObject.position.x-person_mesh.bodyMesh.position.x,controlObject.position.y-35-person_mesh.bodyMesh.position.y,controlObject.position.z-person_mesh.bodyMesh.position.z)
+    var previousRotation=person_mesh.bodyMesh.rotation.y
+    var currentRotation=controlObject.rotation.y;
+    person_mesh.rotate(previousRotation,currentRotation)
+    console.log(currentRotation)
+/*
+    person_mesh.bodyMesh.x = controlObject.position.x;
+    person_mesh.p.z = controlObject.position.z;
+    person_mesh.position.y = controlObject.position.y-35;
+*/
 
     //personal_id=1
     var temp = {}
     temp['Person'] = {}
     temp['Person']['id'] = personal_id
-    temp['Person']['x'] = person_mesh.position.x
-    temp['Person']['y'] = person_mesh.position.y
-    temp['Person']['z'] = person_mesh.position.z
-    temp['Person']['rotation'] = person_mesh.rotation.y
+    temp['Person']['x'] = person_mesh.bodyMesh.position.x
+    temp['Person']['y'] = person_mesh.bodyMesh.position.y
+    temp['Person']['z'] = person_mesh.bodyMesh.position.z
+    temp['Person']['rotation'] = person_mesh.bodyMesh.rotation.y
     //console.log(camera)
-    console.log(temp)
+    //console.log(temp)
     if (count==0)
     dosend(JSON.stringify(temp))
 

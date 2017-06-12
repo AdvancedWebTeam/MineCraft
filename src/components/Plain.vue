@@ -35,7 +35,8 @@
     websocket = new WebSocket(wsUri);
   };
   websocket.onerror = function (evt) {
-    websocket = new WebSocket(wsUri);
+      websocket.close();
+    //websocket = new WebSocket(wsUri);
   }
   websocket.onmessage = function (evt) {
     onMessage(evt)
@@ -679,8 +680,13 @@
 
 
 
-    var crash = collisionDetect(localVertex, directionVector, objects, 20);
-    if (crash) actualMoveSpeed = 0;
+    var crash = collisionDetect(localVertex, directionVector, objects, 20 + actualMoveSpeed);
+    if (!crash) {
+        controlObject.position.x = controlObject1.position.x;
+        controlObject.position.y = controlObject1.position.y;
+        controlObject.position.z = controlObject1.position.z;
+    }
+/*    if (crash) actualMoveSpeed = 0;
 
 
     var nowPositionY = controlObject.position.y;
@@ -693,7 +699,7 @@
     if (moveLeft) controlObject.translateX(-actualMoveSpeed);
     if (moveRight) controlObject.translateX(actualMoveSpeed);
 
-    controlObject.position.y = nowPositionY;
+    controlObject.position.y = nowPositionY;*/
 
 
     if (jumping) {

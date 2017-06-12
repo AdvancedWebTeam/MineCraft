@@ -17,10 +17,10 @@
    })
    vm.currentTexture='b'
    */
-   //var wsUri = 'ws://10.131.251.151:8081/websocket';
+   var wsUri = 'ws://10.131.251.151:8081/websocket';
   var PersonMesh=require('@/assets/js/PersonModel')
 
-  var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
+  //var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
   var websocket = new WebSocket(wsUri);
   var dosend = function () {
   };
@@ -116,9 +116,10 @@
       } else {
           if (obj.PersonLeave!==undefined) {
             if (person_list[obj.PersonLeave.id]!==undefined) {
-                scene.remove(person_list[obj.PersonLeave.id])
+                //scene.remove(person_list[obj.PersonLeave.id])
+                person_list[obj.PersonLeave.id].remove();
                 person_list[obj.PersonLeave.id]=undefined
-                //console.log(person_list)
+                console.log(person_list)
             }
           }
       }
@@ -280,7 +281,7 @@
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
 
     //camera.position.y = -10;
-    console.log(camera)
+    //console.log(camera)
     camera.position.z=-11.25
     //camera.rotation.y=-Math.PI
     camera.up.x = 0;
@@ -362,7 +363,7 @@
 
     scene.add(person_mesh)*/
     person_mesh=new PersonMesh(scene)
-    console.log(person_mesh)
+    //console.log(person_mesh)
 
     controls = new THREE.PointerLockControls(camera);
 
@@ -749,7 +750,7 @@
     var previousRotation=person_mesh.bodyMesh.rotation.y
     var currentRotation=controlObject.rotation.y;
     person_mesh.rotate(previousRotation,currentRotation)
-    console.log(currentRotation)
+//    console.log(currentRotation)
 /*
     person_mesh.bodyMesh.x = controlObject.position.x;
     person_mesh.p.z = controlObject.position.z;

@@ -264,7 +264,7 @@
   var jumpingHight = 0;
 
 
-  var movementSpeed = 1000;
+  var movementSpeed = 100;
   var target = new THREE.Vector3(0,0,0);
 
 
@@ -635,13 +635,15 @@
   function animate() {
 
     requestAnimationFrame(animate)
-    if (controlsEnabled) moveUpdate();
+    //if (controlsEnabled) moveUpdate();
+    moveUpdate();
     render()
 
   }
   function render() {
     renderer.render(scene, camera)
   }
+
 
 
 
@@ -659,47 +661,46 @@
     var actualMoveSpeed = delta * movementSpeed;
 
 
-    var controlObject1 = controlObject.clone();
-    if (moveForward)  controlObject1.translateZ(-actualMoveSpeed);
 
-    if (moveBackward) controlObject1.translateZ(actualMoveSpeed);
 
-    if (moveLeft) controlObject1.translateX(-actualMoveSpeed);
-    if (moveRight) controlObject1.translateX(actualMoveSpeed);
-    controlObject1.position.y = controlObject.position.y;
-
-    var targetPosition = controlObject1.position.clone();
+    var target;
+    //console.log(person_list);
+    for (var i in person_list) {
+        //console.log(person_list[i]);
+      if (person_list[i]!==undefined) {
+          target = person_list[i];
+          break;
+      }
+    }
 
     var localVertex = controlObject.position.clone()
+    if (target!==undefined) {
+      var controlObject1 = controlObject.clone();
 
-    var directionVector = targetPosition.sub(localVertex).normalize();
+      controlObject1.lookAt(target.position);
+      controlObject1.translateZ(actualMoveSpeed);
+      controlObject1.position.y = controlObject.position.y;
+
+      var targetPosition = controlObject1.position.clone();
 
 
 
+      var directionVector = targetPosition.sub(localVertex).normalize();
+
+      var crash = collisionDetect(localVertex, directionVector, objects, 20+actualMoveSpeed);
 
 
-
-
-    var crash = collisionDetect(localVertex, directionVector, objects, 20 + actualMoveSpeed);
-    if (!crash) {
+      if (!crash) {
         controlObject.position.x = controlObject1.position.x;
         controlObject.position.y = controlObject1.position.y;
         controlObject.position.z = controlObject1.position.z;
+        controlObject.rotation.y = controlObject1.rotation.y;
+        //controlObject.lookAt(target.position);
+      }
+      else jumping = true;
     }
-/*    if (crash) actualMoveSpeed = 0;
 
 
-    var nowPositionY = controlObject.position.y;
-
-
-    if (moveForward)  controlObject.translateZ(-(actualMoveSpeed));
-
-    if (moveBackward) controlObject.translateZ(actualMoveSpeed);
-
-    if (moveLeft) controlObject.translateX(-actualMoveSpeed);
-    if (moveRight) controlObject.translateX(actualMoveSpeed);
-
-    controlObject.position.y = nowPositionY;*/
 
 
     if (jumping) {

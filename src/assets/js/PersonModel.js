@@ -856,5 +856,20 @@ PersonMesh=function (scene) {
     //renderer.render(scene, camera);
 
   }
+  this.remove = function() {
+    scene.remove(this.headMesh);
+    scene.remove(this.bodyMesh);
+    scene.remove(this.rightArmMesh);
+    scene.remove(this.leftArmMesh);
+    scene.remove(this.rightLegMesh);
+    scene.remove(this.leftLegMesh);
+    scene.remove(this.head2Mesh);
+    scene.remove(this.body2Mesh);
+    scene.remove(this.rightArm2Mesh);
+    scene.remove(this.leftArm2Mesh);
+    scene.remove(this.rightLeg2Mesh);
+    scene.remove(this.leftLeg2Mesh);
+
+  }
 }
 module.exports=PersonMesh

@@ -17,10 +17,10 @@
    })
    vm.currentTexture='b'
    */
-   //var wsUri = 'ws://10.131.251.151:8081/websocket';
+   var wsUri = 'ws://10.131.251.151:8081/websocket';
   var PersonMesh=require('@/assets/js/PersonModel')
 
-  var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
+  //var wsUri = 'ws://localhost:8080/mc_server_war_exploded/websocket';
   var websocket = new WebSocket(wsUri);
   var dosend = function () {
   };
@@ -280,7 +280,7 @@
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
 
     //camera.position.y = -10;
-    console.log(camera)
+ //   console.log(camera)
     camera.position.z=-11.25
     //camera.rotation.y=-Math.PI
     camera.up.x = 0;
@@ -362,7 +362,7 @@
 
     scene.add(person_mesh)*/
     person_mesh=new PersonMesh(scene)
-    console.log(person_mesh)
+//    console.log(person_mesh)
 
     controls = new THREE.PointerLockControls(camera);
 
@@ -668,7 +668,7 @@
     for (var i in person_list) {
         //console.log(person_list[i]);
       if (person_list[i]!==undefined) {
-          target = person_list[i];
+          target = person_list[i].bodyMesh;
           break;
       }
     }
@@ -694,10 +694,16 @@
         controlObject.position.x = controlObject1.position.x;
         controlObject.position.y = controlObject1.position.y;
         controlObject.position.z = controlObject1.position.z;
-        controlObject.rotation.y = controlObject1.rotation.y;
-        //controlObject.lookAt(target.position);
+
+
       }
+
       else jumping = true;
+/*
+      var look = controlObject1.clone().translateZ(actualMoveSpeed);
+      look.position.y = controlObject1.position.y;
+      controlObject.lookAt(look);*/
+      controlObject.rotation.y = controlObject1.rotation.y;
     }
 
 
@@ -750,7 +756,7 @@
     var previousRotation=person_mesh.bodyMesh.rotation.y
     var currentRotation=controlObject.rotation.y;
     person_mesh.rotate(previousRotation,currentRotation)
-    console.log(currentRotation)
+//    console.log(currentRotation)
 /*
     person_mesh.bodyMesh.x = controlObject.position.x;
     person_mesh.p.z = controlObject.position.z;

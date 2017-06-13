@@ -699,11 +699,7 @@
       }
 
       else jumping = true;
-/*
-      var look = controlObject1.clone().translateZ(actualMoveSpeed);
-      look.position.y = controlObject1.position.y;
-      controlObject.lookAt(look);*/
-      controlObject.rotation.y = controlObject1.rotation.y;
+
     }
 
 

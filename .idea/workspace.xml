@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6373bb69-41ad-43cd-b5e4-cde6e16ca568" name="Default" comment="add materials">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/assets/js/PersonModel.js" afterPath="$PROJECT_DIR$/src/assets/js/PersonModel.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Plain.vue" afterPath="$PROJECT_DIR$/src/components/Plain.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -22,8 +20,8 @@
       <file leaf-file-name="Plain.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="783" column="27" lean-forward="true" selection-start-line="783" selection-start-column="27" selection-end-line="783" selection-end-column="27" />
+            <state relative-caret-position="254">
+              <caret line="794" column="54" lean-forward="false" selection-start-line="794" selection-start-column="54" selection-end-line="794" selection-end-column="54" />
               <folding>
                 <element signature="n#template#0;n#!!top" expanded="false" />
                 <element signature="e#106#246#0" expanded="false" />
@@ -528,7 +526,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165563000" />
+    <option name="totallyTimeSpent" value="166665000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -921,8 +919,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Plain.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="783" column="27" lean-forward="true" selection-start-line="783" selection-start-column="27" selection-end-line="783" selection-end-column="27" />
+        <state relative-caret-position="254">
+          <caret line="794" column="54" lean-forward="false" selection-start-line="794" selection-start-column="54" selection-end-line="794" selection-end-column="54" />
           <folding>
             <element signature="n#template#0;n#!!top" expanded="false" />
             <element signature="e#106#246#0" expanded="false" />

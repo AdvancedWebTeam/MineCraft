@@ -774,19 +774,19 @@
 
   function collisionDetect(localVertex, directionVector, objects, checkdistance) {
 
-    var bodyHalfsize = 20;
-    var bodyHalfHeight = 75;
+    var bodyHalfSize = 20;
+    var bodyHeight = 75;
     //detect 6 points
     var normalizedDirectionVector = directionVector.clone().normalize();
 
-    var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfsize;
-    var leftDeltaZ = normalizedDirectionVector.x * bodyHalfsize;
-    var rightDeltaX = normalizedDirectionVector.z * bodyHalfsize;
-    var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfsize;
+    var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfSize;
+    var leftDeltaZ = normalizedDirectionVector.x * bodyHalfSize;
+    var rightDeltaX = normalizedDirectionVector.z * bodyHalfSize;
+    var rightDeltaZ = (-normalizedDirectionVector.x) * bodyHalfSize;
 
-    var deltaX = [0, 0, leftDeltaX, leftDeltaX, rightDeltaX, rightDeltaX]
-    var deltaY = [0, -bodyHalfHeight, 0, -bodyHalfHeight, 0, -bodyHalfHeight]
-    var deltaZ = [0, 0, leftDeltaZ, leftDeltaZ, rightDeltaZ, rightDeltaZ]
+    var deltaX = [0, 0,           0,              leftDeltaX, leftDeltaX,   leftDeltaX,     rightDeltaX,  rightDeltaX,  rightDeltaX]
+    var deltaY = [0, -bodyHeight, -bodyHeight/2,  0,          -bodyHeight,  -bodyHeight/2,  0,            -bodyHeight,  -bodyHeight/2]
+    var deltaZ = [0, 0,           0,              leftDeltaZ, leftDeltaZ,   leftDeltaZ,     rightDeltaZ,  rightDeltaZ,  rightDeltaZ]
 
     for (var i = 0; i < deltaX.length; i++) {
       var vertex = localVertex.clone();

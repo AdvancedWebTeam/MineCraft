@@ -42,44 +42,21 @@
     onMessage(evt)
   };
   function onMessage(evt) {
-    //writeToScreen('<span style="color: blue;">RESPONSE: '+ evt.data+'</span>');
+
     var obj = JSON.parse(evt.data);
-    //console.log(obj)
-//    console.log(obj.Action.action)
-/*    if (obj.ID!==undefined) {
-      if (person_list[obj.ID.id] ==undefined) {
-        //personal_id=obj.ID.id
-        personal_id = Math.random()
-      }
-    } else*/
+
     if (obj.Person!==undefined) {
       if ((person_list[obj.Person.id]==undefined) && (obj.Person.id!==personal_id)) {
         var temp_person_mesh = new PersonMesh(scene)
-/*
-        temp_person_mesh.position.x = obj.Person.x
-        temp_person_mesh.position.y = obj.Person.y
-        temp_person_mesh.position.z = obj.Person.z
-        temp_person_mesh.rotation.y=obj.Person.rotation
-*/
+
         temp_person_mesh.changePosition(obj.Person.x,obj.Person.y,obj.Person.z)
         temp_person_mesh.rotate(0,obj.Person.rotation)
         person_list[obj.Person.id]=temp_person_mesh
 
-        //scene.add(temp_person_mesh)
-        //console.log(obj.Person.id)
-        //console.log(person_list)
+
 
       } else {
         if (obj.Person.id==personal_id) {
-/*          person_mesh.position.x=obj.Person.x
-          person_mesh.position.y=obj.Person.y
-          person_mesh.position.z=obj.Person.z
-          person_mesh.rotation.y-=obj.Person.movement
-          camera.position.x=obj.Person.x
-          camera.position.y=obj.Person.y+40
-          camera.position.z=obj.Person.z
-          camera.rotation.y-=obj.Person.movement*/
-
         } else {
           person_list[obj.Person.id].changePosition(obj.Person.x-person_list[obj.Person.id].bodyMesh.position.x,obj.Person.y-person_list[obj.Person.id].bodyMesh.position.y,obj.Person.z-person_list[obj.Person.id].bodyMesh.position.z)
           person_list[obj.Person.id].rotate(person_list[obj.Person.id].bodyMesh.rotation.y,obj.Person.rotation)
@@ -89,7 +66,7 @@
     } else {
       if (obj.Action!==undefined) {
         if (obj.Action.action == 0) {
-          //console.log('Action')
+
           cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
             color: 0xfeb74c,
             opacity: 0,
@@ -102,11 +79,9 @@
           voxel.position.z = obj.Action.z;
           scene.add(voxel)
           objects.push(voxel)
-//      console.log(objects)
 
         } else if (obj.Action.action == 1) {
           for (var i = 0; i < objects.length; i++) {
-//        console.log(objects[i].position.x)
             if ((objects[i].position.x == obj.Action.x) && (objects[i].position.y == obj.Action.y) && (objects[i].position.z == obj.Action.z)) {
               scene.remove(objects[i])
               objects.splice(i, 1)
@@ -116,7 +91,6 @@
       } else {
           if (obj.PersonLeave!==undefined) {
             if (person_list[obj.PersonLeave.id]!==undefined) {
-                //scene.remove(person_list[obj.PersonLeave.id])
                 person_list[obj.PersonLeave.id].remove();
                 person_list[obj.PersonLeave.id]=undefined
                 console.log(person_list)
@@ -125,32 +99,17 @@
       }
     }
     render()
-    //websocket.close();
   }
-  /*dosend(1)*/
   var THREE = require('three')
-  var movement=0
-  //$.getScript
-  //include ('three/examples/js/controls/FirstPersonControls.js');
-  //document.write('<script src=\'' + '../asserts/three/examples/js/controls/FirstPersonControls.js\'' + '><\/script>')
-
-
-  /**
-   * @author mrdoob / http://mrdoob.com/
-   * @author alteredq / http://alteredqualia.com/
-   * @author paulirish / http://paulirish.com/
-   */
 
   THREE.PointerLockControls = function ( camera ) {
 
     var scope = this;
 
     camera.rotation.set( 0, 0, 0 );
-    //oooo.rotation.set(0,0,0);
 
     var pitchObject = new THREE.Object3D();
     pitchObject.add( camera );
-    //pitchObject.add( oooo );
 
     var yawObject = new THREE.Object3D();
     yawObject.position.y = 80;
@@ -167,11 +126,8 @@
 
       yawObject.rotation.y -= movementX * 0.002;
       pitchObject.rotation.x -= movementY * 0.002;
-      //oooo.rotation.y -= movementX * 0.002
 
       pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
-      //movement = movementX*0.002;
-      //oooo.rotation.x = Math.max( - PI_2, Math.min( PI_2, oooo.rotation.x ) );
 
     };
 
@@ -221,9 +177,7 @@
   pathArr[1] = require('@/assets/three/examples/textures/minecraft/dirt.png');
   pathArr[2] = require('@/assets/three/examples/textures/minecraft/grass.png');
   pathArr[3] = require('@/assets/three/examples/textures/minecraft/grass_dirt.png');
-  //var path=pathArr[curBlk]
-  // var Detector = require('three/examples/js/Detector.js')
-  //var Stats = require('three/examples/js/libs/stats.min.js')
+
 
 
   if (!Detector.webgl) Detector.addGetWebGLMessage()
@@ -241,7 +195,7 @@
   var person_list=[]
   var personal_id=0
 
-  var container, stats
+  var container
   var camera, controls, scene, renderer
 
   var clock = new THREE.Clock()
@@ -271,7 +225,6 @@
 
   init()
   animate()
-  //render()
 
 
 
@@ -280,21 +233,13 @@
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000)
 
-    //camera.position.y = -10;
-    //console.log(camera)
+
     camera.position.z=-11.25
-    //camera.rotation.y=-Math.PI
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
-    //personal_id=Math.random();
+
     personal_id=uuid();
-/*
-    controls = new THREE.FirstPersonControls(camera)
-    controls.movementSpeed = 1000
-    controls.lookSpeed = 0.125
-    controls.lookVertical = true
-*/
 
 
     container = document.createElement('div')
@@ -316,29 +261,12 @@
     })
     rollOverMesh = new THREE.Mesh(rollOverGeo, rollOverMaterial)
     scene.add(rollOverMesh)
-    /*
-     if (doBlkChange) {
-     curBlk += 1
-     if (curBlk>3) {
-     curBlk = 0
-     }
-     console.log(curBlk)
-     path = pathArr[curBlk]
-     }
-     */
+
     path = pathArr[curBlk]
-//    console.log(curBlk)
-//    console.log(path)
+
     // cubes
     cubeGeo = new THREE.BoxGeometry(50, 50, 50)
-/*
-    var blockInfo = require('minecraft-blockinfo')
-    var minecraftBlockIdentifier = '_2'
-    blockInfo.blocks[minecraftBlockIdentifier]
-*/
-    /*
-     cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
-     */
+
     // grid
     var size = 500
     var step = 50
@@ -353,21 +281,12 @@
     var line = new THREE.LineSegments(geometry, material)
     scene.add(line)
 
-/*    var person = new THREE.BoxGeometry(40, 80, 40)
-    var personMaterial = new THREE.MeshBasicMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[1])})
-    person_mesh = new THREE.Mesh(person, personMaterial)
-    person_mesh.position.x = camera.position.x
-    person_mesh.position.y = camera.position.y+40
-    person_mesh.position.z = camera.position.z
 
-
-    scene.add(person_mesh)*/
     person_mesh=new PersonMesh(scene)
-    //console.log(person_mesh)
+
 
     controls = new THREE.PointerLockControls(camera);
 
-    //console.log(controls.getObject().position.y);
 
 
     var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -423,7 +342,7 @@
     plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}))
     scene.add(plane)
     objects.push(plane)
-    //console.log(plane)
+
     // Lights
     var ambientLight = new THREE.AmbientLight(0x606060)
     scene.add(ambientLight)
@@ -481,7 +400,7 @@
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
     raycaster.setFromCamera(mouse, camera)
     var intersects = raycaster.intersectObjects(objects)
-//    console.log(objects)
+
     if (intersects.length > 0) {
       var intersect = intersects[0]
       // delete cube
@@ -494,16 +413,12 @@
           temp['Action']['y'] = intersect.object.position.y
           temp['Action']['z'] = intersect.object.position.z
           temp['Action']['material'] = curBlk
-//          console.log(temp)
-//          console.log(JSON.stringify(temp))
+
           dosend(JSON.stringify(temp))
-          //scene.remove(intersect.object)
-//          console.log(intersect.object)
-          //objects.splice(objects.indexOf(intersect.object), 1)
+
         }
         // create cube
       } else {
-//        console.log(curBlk)
         cubeMaterial = new THREE.MeshBasicMaterial(/*{color: 0xff0000, opacity: 0.5, transparent: true}*/{
           color: 0xfeb74c,
           opacity: 0,
@@ -522,26 +437,7 @@
         temp['Action']['y'] = voxel.position.y
         temp['Action']['z'] = voxel.position.z
         temp['Action']['material'] = curBlk
-        //console.log(temp)
-        /* add blk
-         cubeMaterial = new THREE.MeshLambertMaterial({color: 0xfeb74c, map: new THREE.TextureLoader().load(pathArr[curBlk])})
-         var voxel = new THREE.Mesh(cubeGeo,cubeMaterial)
-         voxel.position.x=50
-         voxel.position.y=50
-         voxel.position.z=0
-         scene.add(voxel)
-         objects.push(voxel)
-         */
-        /* remove blk
-         for (var i=0;i<objects.length;i++) {
-         console.log(objects[i].position.x)
-         if ((objects[i].position.x==50) && (objects[i].position.y==50) && (objects[i].position.z==0)) {
-         scene.remove(objects[i])
-         objects.splice(i,1)
-         }
-         }
-         */
-//        console.log(JSON.stringify(temp))
+
         dosend(JSON.stringify(temp))
       }
       render()
@@ -558,9 +454,7 @@
         if (curBlk > 3) {
           curBlk = 0
         }
-//        console.log(curBlk);
         path = pathArr[curBlk];
-//        console.log(path);
         rollOverMaterial.map = new THREE.TextureLoader().load(path);
         rollOverMaterial.map.needsUpdate = true;
         break
@@ -615,17 +509,13 @@
       case 68: /*D*/
         moveRight = false;
         break;
-/*
-      case 90: /!*Z*!/
-        this.doViewChange = false;
-        break;*/
+
     }
   }
   function onDocumentKeyPress(event) {
     switch (event.keyCode) {
       case 69:/*E*/
         doBlkChange = true;
-//        console.log("E");
         break
       case 32: /*space*/
           jumping = true;
@@ -687,24 +577,10 @@
         controlObject.position.y = controlObject1.position.y;
         controlObject.position.z = controlObject1.position.z;
     }
-/*    if (crash) actualMoveSpeed = 0;
 
-
-    var nowPositionY = controlObject.position.y;
-
-
-    if (moveForward)  controlObject.translateZ(-(actualMoveSpeed));
-
-    if (moveBackward) controlObject.translateZ(actualMoveSpeed);
-
-    if (moveLeft) controlObject.translateX(-actualMoveSpeed);
-    if (moveRight) controlObject.translateX(actualMoveSpeed);
-
-    controlObject.position.y = nowPositionY;*/
 
 
     if (jumping) {
-      //alert('jumping!: falling:'+ this.falling);
       if (falling) {
         jumping = false;
       }
@@ -750,14 +626,8 @@
     var previousRotation=person_mesh.bodyMesh.rotation.y
     var currentRotation=controlObject.rotation.y;
     person_mesh.rotate(previousRotation,currentRotation)
-//    console.log(currentRotation)
-/*
-    person_mesh.bodyMesh.x = controlObject.position.x;
-    person_mesh.p.z = controlObject.position.z;
-    person_mesh.position.y = controlObject.position.y-35;
-*/
 
-    //personal_id=1
+
     var temp = {}
     temp['Person'] = {}
     temp['Person']['id'] = personal_id
@@ -765,8 +635,7 @@
     temp['Person']['y'] = person_mesh.bodyMesh.position.y
     temp['Person']['z'] = person_mesh.bodyMesh.position.z
     temp['Person']['rotation'] = person_mesh.bodyMesh.rotation.y
-    //console.log(camera)
-    //console.log(temp)
+
     if (count==0)
     dosend(JSON.stringify(temp))
 
@@ -776,7 +645,7 @@
 
     var bodyHalfSize = 20;
     var bodyHeight = 75;
-    //detect 6 points
+    //detect 8 points
     var normalizedDirectionVector = directionVector.clone().normalize();
 
     var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfSize;

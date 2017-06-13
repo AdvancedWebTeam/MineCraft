@@ -636,7 +636,7 @@
 
     var bodyHalfSize = 20;
     var bodyHeight = 75;
-    //detect 6 points
+    //detect 8 points
     var normalizedDirectionVector = directionVector.clone().normalize();
 
     var leftDeltaX = (-normalizedDirectionVector.z) * bodyHalfSize;
